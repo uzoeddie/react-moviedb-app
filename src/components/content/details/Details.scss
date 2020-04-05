@@ -1,0 +1,119 @@
+.movie-container {
+    position: relative;
+}
+
+.movie-bg,
+.movie-overlay {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+}
+
+.movie-bg {
+    width: 100%;
+    height: 515px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.movie-overlay {
+    background: rgba(0, 0, 0, 0.8);
+    height: 515px;
+    z-index: 2;
+}
+
+.movie-details {
+    position: relative;
+    z-index: 3;
+    display: grid;
+    grid-template-areas: "movieImage movieBody";
+    grid-template-columns: 400px 1fr;
+    grid-template-rows: 1fr;
+    padding-top: 200px;
+    padding-right: 200px;
+    padding-left: 200px;
+}
+
+.movie-image {
+    grid-area: movieImage;
+    width: 330px;
+    height: 550px;
+    
+    img {
+        display: inline-block;
+        max-height: 100%;
+        max-width: 100%;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+}
+
+.movie-body {
+    grid-area: movieBody;
+
+    .movie-overview {
+        height: auto;
+
+        .title {
+            margin-top: -10px;
+            font-size: 36px;
+            font-weight: 700;
+            color: #ffffff;
+            text-align: left;
+            text-transform: uppercase;
+            margin-bottom: 25px;
+        
+            span {
+                font-size: 24px;
+                font-weight: 300;
+                color: #4f5b68;
+            }
+        }
+        
+        .genres {
+            height: 49px;
+            line-height: 49px;
+            display: flex;
+            margin-bottom: 25px;
+        
+            span {
+                font-size: 14px;
+                font-weight: 700;
+                text-transform: uppercase;
+                color: #dd003f;
+                padding-right: 35px;
+            }
+        }
+        
+        .rating {
+            height: 49px;
+            line-height: 49px;
+            display: flex;
+            font-size: 25px;
+            margin-bottom: 90px;
+        
+            .fas {
+                color: #f5b50a;
+                padding-left: 4px;
+            }
+        
+            span {
+                color: #9aa9bb;
+                margin-top: -10px;
+                margin-left: 10px;
+            }
+        
+            p {
+                color: #dd003f;
+                margin-left: 10px;
+                font-size: 18px;
+            }
+        }
+    }
+    
+}

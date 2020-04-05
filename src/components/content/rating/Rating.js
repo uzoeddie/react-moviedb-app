@@ -1,0 +1,46 @@
+import React, { useRef, useEffect, useState, Fragment } from 'react';
+
+import './Rating.scss';
+
+const Rating = ({ rating, totalStars }) => {
+    const ratingRef = useRef();
+    const [numberStars, setNumberStars] = useState();
+
+    useEffect(() => {
+        setNumberStars([ ...Array(totalStars).keys() ].map( i => i+1));
+        let percentage;
+        if (rating <= 5) {
+            percentage = (rating / 5) * 100;
+        } else {
+            percentage = (rating / 10) * 100;
+        }
+        const starPercentageRounded = `${(Math.floor(percentage))}%`;
+        ratingRef.current.style.width = starPercentageRounded;
+    }, [rating, totalStars]);
+
+    return (
+        <div className="star-rating">
+            <div className="back-stars">
+                {
+                    numberStars && numberStars.map((i) =>
+                        <Fragment key={i}>
+                            <i className="fa fa-star" aria-hidden="true"></i>
+                        </Fragment>
+                    )
+                }
+                
+                <div className="front-stars" ref={ratingRef}>
+                    {
+                        numberStars && numberStars.map((j) =>
+                            <Fragment key={j}>
+                                <i className="fa fa-star" aria-hidden="true"></i>
+                            </Fragment>
+                        )
+                    }
+                </div>
+            </div>
+        </div>  
+    )
+}
+
+export default Rating;

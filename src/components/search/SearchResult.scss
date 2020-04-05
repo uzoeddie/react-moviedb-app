@@ -1,0 +1,108 @@
+.grid-search-title {
+    margin-top: 100px;
+    display: grid;
+    text-align: left;
+    grid-template-areas: "text1 text2";
+    grid-template-rows: max-content max-content;
+    grid-template-columns: max-content;
+    padding-left: 25px;
+    font-size: 18px;
+}
+
+.grid-text1 {
+    grid-area: text1;
+    padding-right: 8px;
+    color: #9aa9bb;
+}
+
+.grid-text2 {
+    grid-area: text2;
+    color: #ffffff;
+}
+
+.grid {
+    display: grid;
+    row-gap: 5rem;
+    column-gap: 2rem;
+    grid-template-columns: repeat(5, minmax(240px, 1fr));
+    grid-auto-rows: 460px;
+    margin: 10px 25px;
+}
+
+.grid-cell {
+    display: grid;
+    background: #353535;
+    color: #fff;
+    box-shadow: rgba(3, 8, 20, 0.1) 0px 0.15rem 0.5rem, rgba(2, 8, 20, 0.1) 0px 0.075rem 0.175rem;
+    height: 100%;
+    width: 100%;
+    border-radius: 4px;
+    transition: all 500ms;
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+ }
+  
+.grid-cell:hover .grid-read-more {
+    display: flex;
+    background: rgba(49, 56, 64, 0.5);
+    transition: all 1s ease-out;
+}
+
+.grid-read-more {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    display: none;
+    
+    .grid-cell-button {
+        background-color: #dd003f;
+        padding: 8px 15px;
+        text-transform: uppercase;
+        color: #ffffff;
+        border: none;
+        border-radius: 30px;
+        font-weight: bold;
+        z-index: 10;
+    }
+}
+
+
+.grid-detail {
+    text-align: left;
+    bottom: 0;
+    margin-top: 10px;
+    width: 348px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    .grid-title{
+        font-size: 14px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: #ffffff;
+    }
+
+    .grid-rating {
+        color: #ffffff;
+        margin-left: -5px;
+        .fas {
+            color: #f5b50a;
+            padding-left: 4px;
+        }
+
+        span {
+            color: #9aa9bb;
+            font-size: 13px;;
+        }
+
+        .grid-date {
+            color: #ffffff;
+            padding-left: 4px;
+            float: right;
+        }
+    }
+}
+
