@@ -54,12 +54,12 @@ jobs:
             aws configure set preview.cloudfront true  # Turn on cloudfront in AWS CLI
             if [ "${CIRCLE_BRANCH}" == "master" ]  # Check current branch to decide to which S3 bucket deploy
             then
-              aws s3 sync ~/repo/build s3://react-moviedb --delete
+              aws --region ${AWS_REGION} s3 sync ~/repo/build s3://react-moviedb --delete
             elif [ "${CIRCLE_BRANCH}" == "staging" ]
             then
-              aws s3 sync ~/repo/build s3://react-moviedb-staging --delete
+              aws --region ${AWS_REGION} s3 sync ~/repo/build s3://react-moviedb-staging --delete
             else
-              aws s3 sync ~/repo/build s3://react-moviedb-dev --delete
+              aws --region ${AWS_REGION} s3 sync ~/repo/build s3://react-moviedb-dev --delete
             fi
 
 workflows:
