@@ -1,0 +1,81 @@
+version: 2.1
+
+jobs:
+  build:
+    docker:
+      - image: circleci/node:12.14.1
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - app-{{ checksum "package.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - app-
+      - run: 
+          name: Install Dependencies
+          command: npm install
+      - save_cache: # Save node_modules into cache with a checksum of the package.json
+          paths:
+            - node_modules
+          key: app-{{ checksum "package.json" }}
+
+  deploy:
+    docker:
+      - image: circleci/node:12.14.1
+    working_directory: ~/repo
+    steps:
+      - checkout
+      # Log the current branch
+      - run:
+          name: Show current branch
+          command: echo ${CIRCLE_BRANCH}
+      - run:
+          name: Installing AWS CLI
+          working_directory: /
+          command: |
+            sudo apt-get -y -qq update
+            sudo apt-get install -y awscli
+            sudo apt-get install -y python-pip python-dev build-essential
+            sudo pip install awsebcli --upgrade
+      - run:
+          name: Preparing Artifact
+          command: |
+            npm install
+            npm run build # Here goes your build command.
+            cd build       # My react app generate a build folder
+            zip ../build.zip -r * .[^.]* # Just zip your files
+            echo "Successfully building"
+      - run:
+          name: Deploying Client to S3
+          command: |
+            aws configure set preview.cloudfront true  # Turn on cloudfront in AWS CLI
+            if [ "${CIRCLE_BRANCH}" == "master" ]  # Check current branch to decide to which S3 bucket deploy
+            then
+              aws --region ${AWS_REGION} s3 sync ~/repo/build s3://react-moviedb --delete
+            elif [ "${CIRCLE_BRANCH}" == "staging" ]
+            then
+              aws --region ${AWS_REGION} s3 sync ~/repo/build s3://react-moviedb-staging --delete
+            else
+              aws --region ${AWS_REGION} s3 sync ~/repo/build s3://react-moviedb-dev --delete
+            fi
+
+workflows:
+  version: 2
+  # The build and deploy workflow
+  build_and_deploy:
+      jobs:
+          - build
+          # The deploy job will only run on the filtered branches and
+          # require the build job to be successful before it starts
+          - deploy:
+              requires:
+                  - build
+              filters:
+                  branches:
+                      only:
+                          - develop
+                          - staging
+                          - master

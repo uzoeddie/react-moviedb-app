@@ -8,8 +8,6 @@ import Details from './components/content/details/Details';
 import store from './redux/store';
 import Header from './components/header/Header';
 
-// api - 5777c7d7f8c6e8682e7818d61ad21e3a
-
 const App = () => {
   return (
     <Provider store={store}>
