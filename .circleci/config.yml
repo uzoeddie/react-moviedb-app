@@ -57,9 +57,9 @@ jobs:
               aws s3 sync ~/repo/build s3://react-moviedb --delete
             elif [ "${CIRCLE_BRANCH}" == "staging" ]
             then
-              aws s3 sync ~/repo/dist s3://react-moviedb-staging --delete
+              aws s3 sync ~/repo/build s3://react-moviedb-staging --delete
             else
-              aws s3 sync ~/repo/dist s3://react-moviedb-dev --delete
+              aws s3 sync ~/repo/build s3://react-moviedb-dev --delete
             fi
 
 workflows:
