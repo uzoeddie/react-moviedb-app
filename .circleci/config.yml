@@ -60,6 +60,7 @@ jobs:
               aws --region ${AWS_REGION} s3 sync ~/repo/build s3://react-moviedb-staging --delete
             else
               aws --region ${AWS_REGION} s3 sync ~/repo/build s3://react-moviedb-dev --delete
+              aws cloudfront create-invalidation --distribution-id ${DEV_DISTRIBUTION_ID} --paths /\*
             fi
 
 workflows:
