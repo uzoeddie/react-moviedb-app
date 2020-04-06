@@ -44,7 +44,7 @@ const Header = (props) => {
         setResponsePageNumber(page, totalPages);
         
         // eslint-disable-next-line
-    }, [type, page, totalPages]);
+    }, [type]);
 
     const setMovieUrlType = (type, name) => {
         setType(type);

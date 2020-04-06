@@ -7,6 +7,7 @@ export const MOVIE_TYPE = 'MOVIE_TYPE';
 export const MOVIE_DETAILS = 'MOVIE_DETAILS';
 export const RESPONSE_PAGE = 'RESPONSE_PAGE';
 export const CLEAR_MOVIE_DETAILS = 'CLEAR_MOVIE_DETAILS';
+export const LOAD_MORE_RESULTS = 'LOAD_MORE_RESULTS';
 
 export const POPULAR_MOVIES = 'POPULAR_MOVIES';
 export const TOP_RATED = 'TOP_RATED';

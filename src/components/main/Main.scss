@@ -12,14 +12,19 @@
   overflow-y: scroll;
 }
 
-// header{
-//   grid-area: header;
-// }
-
 .content{
   grid-area: content;
+
+  .data-loading {
+    display: block;
+    text-align: center;
+    border: 0;
+    font-size: 5rem;
+    color: white;
+  }
 }
 
 .footer{
   grid-area: footer;
 }
+
