@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
 
 import './Grid.scss';
 import { IMAGE_URL } from '../../../services/movies.service';
@@ -26,7 +27,7 @@ const Grid = (props) => {
             <div className="grid">
                 {
                     movieData.map((data) => 
-                        <div key={data.id}>
+                        <div key={uuidv4()}>
                             <div  
                                 className="grid-cell" 
                                 style={{backgroundImage: `url(${IMAGE_URL}/${data.poster_path})`}}>
@@ -40,7 +41,6 @@ const Grid = (props) => {
                                     <div className="grid-rating">
                                         <Rating rating={data.vote_average} totalStars={1} />&nbsp;&nbsp;
                                         <div className="grid-vote-average">{data.vote_average}</div> 
-                                        {/* <span className="grid-date">{data.release_date}</span> */}
                                     </div>
                                 </div>
                             </div>

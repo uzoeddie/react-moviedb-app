@@ -6,7 +6,8 @@ import {
     MOVIE_TYPE,
     RESPONSE_PAGE,
     MOVIE_DETAILS,
-    CLEAR_MOVIE_DETAILS
+    CLEAR_MOVIE_DETAILS,
+    LOAD_MORE_RESULTS
 } from '../types';
 import { 
     API_URL, 
@@ -20,13 +21,22 @@ import {
 
 export const getMovies = (type, pageNumber) => async dispatch => {
     try {
-        const movies = await API_URL(type, pageNumber);
-        const { results, page, total_pages } = movies.data;
-        const payload = { 
-            page, 
-            totalPages: total_pages 
-        };
+        const response = await getMoviesRequest(type, pageNumber);
+        const { results, payload } = response;
         dispatchMethod(MOVIE_LIST, results, dispatch);
+        dispatchMethod(RESPONSE_PAGE, payload, dispatch);
+    } catch (error) {
+        if (error.response) {
+            dispatchMethod(SET_ERROR, error.response.data.message, dispatch);
+        }
+    }
+}
+
+export const loadMoreMovies = (type, pageNumber, loadMore) => async dispatch => {
+    try {
+        const response = await getMoviesRequest(type, pageNumber);
+        const { results, payload } = response;
+        dispatchMethod(LOAD_MORE_RESULTS, {list:results, loadMore}, dispatch);
         dispatchMethod(RESPONSE_PAGE, payload, dispatch);
     } catch (error) {
         if (error.response) {
@@ -90,6 +100,16 @@ export const setMovieType = type => async dispatch => {
 export const setResponsePageNumber = (page, totalPages) => async dispatch => {
     const payload = { page, totalPages };
     dispatchMethod(RESPONSE_PAGE, payload, dispatch);
+}
+
+const getMoviesRequest = async (type, pageNumber) => {
+    const movies = await API_URL(type, pageNumber);
+    const { results, page, total_pages } = movies.data;
+    const payload = { 
+        page, 
+        totalPages: total_pages 
+    };
+    return { results, payload };
 }
 
 const dispatchMethod = (type, payload, dispatch) => {

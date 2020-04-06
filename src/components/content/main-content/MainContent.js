@@ -7,14 +7,12 @@ import Grid from '../grid/Grid';
 import { IMAGE_URL } from '../../../services/movies.service';
 import { setResponsePageNumber, getMovies } from '../../../redux/actions/movies';
 import Paginate from '../../pagination/Paginate';
-// import Carousel from '../carousel/Carousel';
 // import Popular from '../popular/Popular';
 
 const MainContent = (props) => {
     const { list, totalPages, page, movieType, setResponsePageNumber, getMovies } = props;
     const [currentPage, setCurrentPage] = useState(page);
     const [images, setImages] = useState([]);
-    // const [, setImages] = useState([]);
     const randomMovies =  list.sort(() => Math.random() - Math.random()).slice(0, 3);
 
     useEffect(() => {
@@ -41,19 +39,7 @@ const MainContent = (props) => {
         }
 
         // eslint-disable-next-line
-    }, [currentPage, page]);
-
-    // const children = () => {
-    //     return (
-    //         <>
-    //             {
-    //                 images.map(data => 
-    //                     <div className="slider-image" key={data.id} style={{backgroundImage: `url(${data.url})`}}></div>
-    //                 )
-    //             }
-    //         </>
-    //     );
-    // }
+    }, [currentPage]);
 
     const paginate = type => {
         if (type === 'prev' && currentPage >= 1) {
@@ -69,19 +55,17 @@ const MainContent = (props) => {
                 loop={true}
                 showNav={true}
                 showArrows={true}
-                // children={children()}
                 images={images}
             />
-            {/* <Carousel images={images}/> */}
             {/* <Popular /> */}
             <div className="grid-movie-title">
                 <div className="movieType">{movieType}</div>
                 <div className="paginate"><Paginate currentPage={currentPage} totalPages={totalPages} paginate={paginate} /></div>
             </div>
             <Grid />
-            <div className="grid-paginate">
+            {/* <div className="grid-paginate">
                 <Paginate currentPage={currentPage} totalPages={totalPages} paginate={paginate} />
-            </div>
+            </div> */}
         </div>
     )
 }
