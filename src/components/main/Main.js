@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 
 import './Main.scss';
 import MainContent from '../content/main-content/MainContent';
-import Footer from '../footer/Footer';
 import SearchResult from '../search/SearchResult';
 import Spinner from '../loader/Spinner';
 import { setResponsePageNumber, loadMoreMovies } from '../../redux/actions/movies'
@@ -44,7 +43,6 @@ const Main = (props) => {
     }
 
     const handleScroll = () => {
-        console.log('scroll')
         const containerHeight = mainRef.current.getBoundingClientRect().height;
         const { top: bottomLineOffsetTop } = bottomLineRef.current.getBoundingClientRect();
         if (bottomLineOffsetTop <= containerHeight) {
@@ -64,9 +62,6 @@ const Main = (props) => {
                                 <MainContent /> :
                                 <SearchResult />
                             }
-                        </div>
-                        <div className="footer">
-                            <Footer />
                         </div>
                     </>
                 }
