@@ -29,9 +29,6 @@ const SearchBar = (props) => {
                     onChange={onSearchChange}
                     placeholder="Search for a movie" 
                 />
-                {/* <button className="searchButton">
-                    <i className="fas fa-search"></i>
-                </button> */}
             </div>
         </>
     )
