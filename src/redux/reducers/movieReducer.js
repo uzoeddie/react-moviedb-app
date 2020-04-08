@@ -16,8 +16,7 @@ const initialState = {
     movieType: 'Now Playing',
     movie: [],
     page: 1,
-    totalPages: 0,
-    loadMore: false
+    totalPages: 0
 };
 
 export default(state = initialState, action) => {
@@ -61,8 +60,7 @@ export default(state = initialState, action) => {
         case LOAD_MORE_RESULTS:
             return {
                 ...state,
-                list: [...state.list, ...action.payload.list],
-                loadMore: action.payload.loadMore,
+                list: [...state.list, ...action.payload]
             };
         default:
             return state;

@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 import './SearchResult.scss';
 import { IMAGE_URL } from '../../services/movies.service';
+import LazyImage from '../content/lazy-image/LazyImage';
 
 const SearchResult = (props) => {
     const { searchResult, searchQuery } = props;
@@ -24,22 +25,22 @@ const SearchResult = (props) => {
                         <Fragment key={data.id}>
                             {
                                 data.poster_path &&
-                                <div>
-                                    <div  
-                                        className="grid-cell" 
-                                        style={{backgroundImage: `url(${IMAGE_URL}/${data.poster_path})`}}>
-                                        <div className="grid-read-more">
-                                            <button className="grid-cell-button">Read more</button>
-                                        </div>
-                                        <div className="grid-detail">
-                                            <span className="grid-title">{data.title}</span>
-                                            <div className="grid-rating">
-                                                <i className="fas fa-star"></i> {data.vote_average} <span>/ 10</span> 
-                                                <span className="grid-date">{data.release_date}</span>
-                                            </div>
+                                <LazyImage
+                                    className="grid-cell"
+                                    src={`${IMAGE_URL}/${data.poster_path}`}
+                                    alt="placeholder"
+                                >
+                                    <div className="grid-read-more">
+                                        <button className="grid-cell-button">Read more</button>
+                                    </div>
+                                    <div className="grid-detail">
+                                        <span className="grid-title">{data.title}</span>
+                                        <div className="grid-rating">
+                                            <i className="fas fa-star"></i> {data.vote_average} <span>/ 10</span> 
+                                            <span className="grid-date">{data.release_date}</span>
                                         </div>
                                     </div>
-                                </div>
+                                </LazyImage>
                             }
                         </Fragment>
                     )

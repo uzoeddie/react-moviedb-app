@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import './Grid.scss';
 import { IMAGE_URL } from '../../../services/movies.service';
 import Rating from '../rating/Rating';
+import LazyImage from '../lazy-image/LazyImage';
 
 const Grid = (props) => {
     const { list } = props;
@@ -28,9 +29,11 @@ const Grid = (props) => {
                 {
                     movieData.map((data) => 
                         <div key={uuidv4()}>
-                            <div  
-                                className="grid-cell" 
-                                style={{backgroundImage: `url(${IMAGE_URL}/${data.poster_path})`}}>
+                            <LazyImage
+                                className="grid-cell"
+                                src={`${IMAGE_URL}/${data.poster_path}`}
+                                alt="placeholder"
+                            >
                                 <div className="grid-read-more">
                                     <button className="grid-cell-button">
                                         <Link to={`/${data.id}/${formatMovieTitle(data.title)}/details`}>READ MORE</Link>
@@ -43,7 +46,7 @@ const Grid = (props) => {
                                         <div className="grid-vote-average">{data.vote_average}</div> 
                                     </div>
                                 </div>
-                            </div>
+                            </LazyImage>
                         </div>
                     )
                 }

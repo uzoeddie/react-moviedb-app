@@ -32,11 +32,11 @@ export const getMovies = (type, pageNumber) => async dispatch => {
     }
 }
 
-export const loadMoreMovies = (type, pageNumber, loadMore) => async dispatch => {
+export const loadMoreMovies = (type, pageNumber) => async dispatch => {
     try {
         const response = await getMoviesRequest(type, pageNumber);
         const { results, payload } = response;
-        dispatchMethod(LOAD_MORE_RESULTS, {list:results, loadMore}, dispatch);
+        dispatchMethod(LOAD_MORE_RESULTS, results, dispatch);
         dispatchMethod(RESPONSE_PAGE, payload, dispatch);
     } catch (error) {
         if (error.response) {

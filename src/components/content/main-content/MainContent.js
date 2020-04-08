@@ -10,7 +10,14 @@ import Paginate from '../../pagination/Paginate';
 // import Popular from '../popular/Popular';
 
 const MainContent = (props) => {
-    const { list, totalPages, page, movieType, setResponsePageNumber, getMovies } = props;
+    const { 
+        list, 
+        totalPages, 
+        page, 
+        movieType, 
+        setResponsePageNumber, 
+        getMovies
+    } = props;
     const [currentPage, setCurrentPage] = useState(page);
     const [images, setImages] = useState([]);
     const randomMovies =  list.sort(() => Math.random() - Math.random()).slice(0, 3);
@@ -41,6 +48,7 @@ const MainContent = (props) => {
         // eslint-disable-next-line
     }, [currentPage]);
 
+
     const paginate = type => {
         if (type === 'prev' && currentPage >= 1) {
             setCurrentPage(prev => prev - 1);
@@ -63,9 +71,6 @@ const MainContent = (props) => {
                 <div className="paginate"><Paginate currentPage={currentPage} totalPages={totalPages} paginate={paginate} /></div>
             </div>
             <Grid />
-            {/* <div className="grid-paginate">
-                <Paginate currentPage={currentPage} totalPages={totalPages} paginate={paginate} />
-            </div> */}
         </div>
     )
 }
