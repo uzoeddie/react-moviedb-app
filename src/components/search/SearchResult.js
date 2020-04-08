@@ -1,7 +1,7 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import { connect } from 'react-redux';
 
-import './SearchResult.scss';
+// import './SearchResult.scss';
 import { IMAGE_URL } from '../../services/movies.service';
 import LazyImage from '../content/lazy-image/LazyImage';
 

@@ -6,11 +6,10 @@
   
 .searchTerm {
     width: 100%;
-    border: 3px solid #0f2133;
-    border-right: none;
+    border: 1px solid #9aa9bb;
     padding: 5px;
     height: 36px;
-    border-radius: 5px 0 0 5px;
+    border-radius: 5px;
     outline: none;
     color: #9DBFAF;
     line-height: 36px;
@@ -28,7 +27,7 @@
     background: #0f2133;
     text-align: center;
     color: #fff;
-    border-radius: 0 5px 5px 0;
+    border-radius: 5px;
     cursor: pointer;
     font-size: 20px;
 }
