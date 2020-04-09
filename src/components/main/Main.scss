@@ -1,18 +1,7 @@
 .main {
   text-align: center;
-  // display: grid;
-  // grid-template-areas:
-  //   // "header"
-  //   "content"
-  //   "footer";
-  // grid-template-columns: 1fr;
-  // grid-template-rows: 1fr max-content;
-  // height: 100vh;
+  height: 100vh;
   background-color: #020e18;
   overflow-y: scroll;
-}
-
-content{
-  grid-area: content;
 }
 
