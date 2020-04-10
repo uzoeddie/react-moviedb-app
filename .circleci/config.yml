@@ -4,7 +4,7 @@ version: 2.1
 executors:
   app-executor:
     docker:
-      - image: circleci/node:12.14.1
+      - image: circleci/node:12.14.1-alpine
     working_directory: ~/repo
 
 jobs:
