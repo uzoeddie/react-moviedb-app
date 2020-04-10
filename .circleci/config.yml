@@ -4,7 +4,7 @@ version: 2.1
 executors:
   app-executor:
     docker:
-      - image: circleci/node:12.14.1-alpine
+      - image: circleci/node:12.14.1
     working_directory: ~/repo
 
 jobs:
@@ -41,7 +41,7 @@ jobs:
     steps:
       - run:
           name: Install Docker client
-          command: apk add docker-cli
+          command: sudo apt-get install docker-cli
       - run: docker info
       - run: docker login -u "${DOCKER_USERNAME}" -p "${DOCKER_PASSWORD}"
 
