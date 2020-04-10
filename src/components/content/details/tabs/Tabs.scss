@@ -4,17 +4,8 @@
 
 .tab-list {
   padding-left: 0;
-  // display: grid;
-  // grid-auto-rows: 1fr; 
-  // // grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); 
-  // grid-template-columns: fit-content(800px);
-  // grid-gap: 1em;
-
-  // display: grid;
-  // grid-template-columns: repeat(auto-fill, minmax(25ch, auto));
-  // grid-template-rows: 3rem auto;
 }
-  
+
 .tab-list-item {
   display: inline-block;
   list-style: none;
@@ -26,7 +17,7 @@
   padding-bottom: 15px;
   margin-right: 50px;
 }
-  
+
 .tab-list-active {
   color: #dcf836;
   border-bottom: 3px solid #dcf836;

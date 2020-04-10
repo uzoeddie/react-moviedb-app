@@ -1,147 +1,175 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 import './Header.scss';
-import { getMovies, setMovieType, setResponsePageNumber, clearMovieDetails, searchResult, searchQuery, } from '../../redux/actions/movies';
+import {
+  getMovies,
+  setMovieType,
+  setResponsePageNumber,
+  clearMovieDetails,
+  searchResult,
+  searchQuery
+} from '../../redux/actions/movies';
 
 const HEADER_LIST = [
-    {
-        id: 1,
-        iconClass: 'fas fa-film',
-        name: 'Now Playing',
-        type: 'now_playing'
-    },
-    {
-        id: 2,
-        iconClass: 'fas fa-fire',
-        name: 'Popular',
-        type: 'popular'
-    },
-    {
-        id: 3,
-        iconClass: 'fas fa-star',
-        name: 'Top Rated',
-        type: 'top_rated'
-    },
-    {
-        id: 4,
-        iconClass: 'fas fa-plus-square',
-        name: 'Upcoming',
-        type: 'upcoming'
-    },
+  {
+    id: 1,
+    iconClass: 'fas fa-film',
+    name: 'Now Playing',
+    type: 'now_playing'
+  },
+  {
+    id: 2,
+    iconClass: 'fas fa-fire',
+    name: 'Popular',
+    type: 'popular'
+  },
+  {
+    id: 3,
+    iconClass: 'fas fa-star',
+    name: 'Top Rated',
+    type: 'top_rated'
+  },
+  {
+    id: 4,
+    iconClass: 'fas fa-plus-square',
+    name: 'Upcoming',
+    type: 'upcoming'
+  }
 ];
 
 const Header = (props) => {
-    const { 
-        getMovies, 
-        setMovieType, 
-        page, 
-        totalPages, 
-        setResponsePageNumber, 
-        clearMovieDetails,
-        searchResult, 
-        searchQuery
-    } = props;
-    const [type, setType] = useState('now_playing');
-    let [navClass, setNavClass] = useState(false);
-    let [menuClass, setMenuClass] = useState(false);
-    const [search, setSearch] = useState('');
-    const menuRef = useRef();
+  const {
+    getMovies,
+    setMovieType,
+    page,
+    totalPages,
+    setResponsePageNumber,
+    clearMovieDetails,
+    searchResult,
+    searchQuery
+  } = props;
+  const [type, setType] = useState('now_playing');
+  let [navClass, setNavClass] = useState(false);
+  let [menuClass, setMenuClass] = useState(false);
+  const [search, setSearch] = useState('');
+  const menuRef = useRef();
 
-    const history = useHistory();
+  const history = useHistory();
 
-    useEffect(() => {
-        getMovies(type, page);
-        setResponsePageNumber(page, totalPages);
-        
-        // eslint-disable-next-line
-    }, [type]);
+  useEffect(() => {
+    getMovies(type, page);
+    setResponsePageNumber(page, totalPages);
 
-    const setMovieUrlType = (type, name) => {
-        setType(type);
-        setMovieType(name);
+    // eslint-disable-next-line
+  }, [type]);
+
+  const setMovieUrlType = (type, name) => {
+    setType(type);
+    setMovieType(name);
+  };
+
+  const navigateToHomePage = () => {
+    clearMovieDetails();
+    history.push('/');
+  };
+
+  const onSearchChange = async (e) => {
+    setSearch(e.target.value);
+    searchResult(e.target.value);
+    searchQuery(e.target.value);
+
+    if (e.target.value === '') {
+      getMovies('now_playing');
     }
+  };
 
-    const navigateToHomePage = () => {
-        clearMovieDetails();
-        history.push('/');
+  const toggleMenu = () => {
+    menuClass = !menuClass;
+    navClass = !navClass;
+    setNavClass(navClass);
+    setMenuClass(menuClass);
+    if (navClass) {
+      document.body.classList.add('header-nav-open');
+    } else {
+      document.body.classList.remove('header-nav-open');
     }
+  };
 
-    const onSearchChange = async e => {
-        setSearch(e.target.value);
-        searchResult(e.target.value);
-        searchQuery(e.target.value);
+  return (
+    <>
+      <div className="header-nav-wrapper">
+        <div className="grad-bar"></div>
+        <div className="header-navbar">
+          <div className="header-image" onClick={() => navigateToHomePage()}>
+            <img
+              src="https://upload.wikimedia.org/wikipedia/en/thumb/c/c8/Bluestar_%28bus_company%29_logo.svg/1280px-Bluestar_%28bus_company%29_logo.svg.png"
+              alt=""
+            />
+          </div>
+          <div
+            className={`${menuClass ? 'header-menu-toggle is-active' : 'header-menu-toggle'}`}
+            id="header-mobile-menu"
+            ref={menuRef}
+            onClick={() => toggleMenu()}
+          >
+            <span className="bar"></span>
+            <span className="bar"></span>
+            <span className="bar"></span>
+          </div>
+          <ul className={`${navClass ? 'header-nav header-mobile-nav' : 'header-nav'}`}>
+            {HEADER_LIST.map((data, i) => (
+              <li
+                key={data.id}
+                className={data.type === type ? 'active-item header-nav-item' : 'header-nav-item'}
+                onClick={() => setMovieUrlType(data.type, data.name)}
+              >
+                <span className="header-list-icon">
+                  <i className={data.iconClass}></i>
+                </span>
+                &nbsp;
+                <span className="header-list-name">{data.name}</span>
+              </li>
+            ))}
+            <input
+              className="search-input"
+              type="text"
+              value={search}
+              onChange={onSearchChange}
+              placeholder="Search for a movie"
+            />
+          </ul>
+        </div>
+      </div>
+    </>
+  );
+};
 
-        if (e.target.value === '') {
-            getMovies('now_playing');
-        }
-    }
+Header.propTypes = {
+  searchResult: PropTypes.func,
+  searchQuery: PropTypes.func,
+  totalPages: PropTypes.number,
+  page: PropTypes.number,
+  list: PropTypes.array,
+  setResponsePageNumber: PropTypes.func,
+  setMovieType: PropTypes.func,
+  getMovies: PropTypes.func,
+  clearMovieDetails: PropTypes.func
+};
 
-    const toggleMenu = () => {
-        menuClass = !menuClass;
-        navClass = !navClass;
-        setNavClass(navClass);
-        setMenuClass(menuClass);
-        if (navClass) {
-            document.body.classList.add('header-nav-open');
-        } else {
-            document.body.classList.remove('header-nav-open');
-        }
-    }
-
-    return (
-        <>
-            <div className="header-nav-wrapper">
-            <div className="grad-bar"></div>
-            <div className="header-navbar">
-                <div className="header-image" onClick={() => navigateToHomePage()}>
-                    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/c/c8/Bluestar_%28bus_company%29_logo.svg/1280px-Bluestar_%28bus_company%29_logo.svg.png" alt="" />
-                </div>
-                <div className={`${menuClass ? 'header-menu-toggle is-active' : 'header-menu-toggle'}`} id="header-mobile-menu" ref={menuRef} onClick={() => toggleMenu()}>
-                    <span className="bar"></span>
-                    <span className="bar"></span>
-                    <span className="bar"></span>
-                </div>
-                <ul 
-                    className={`${navClass ? 'header-nav header-mobile-nav' : 'header-nav'}`}>
-                    {
-                        HEADER_LIST.map((data, i) => 
-                            <li 
-                                key={data.id}
-                                className={data.type === type ? 'active-item header-nav-item' : 'header-nav-item'} 
-                                onClick={() => setMovieUrlType(data.type, data.name)}
-                            >
-                                <span className="header-list-icon">
-                                    <i className={data.iconClass}></i>
-                                </span>&nbsp;
-                                <span className='header-list-name'>
-                                        {data.name}
-                                </span>
-                            </li>
-                        )
-                    }
-                    <input 
-                        className='search-input' 
-                        type="text" 
-                        value={search}
-                        onChange={onSearchChange}
-                        placeholder="Search for a movie" 
-                    />
-                </ul>
-            </div>
-            </div>
-        </>
-    )
-}
-
-const mapStateToProps = state => ({
-    list: state.movies.list,
-    totalPages: state.movies.totalPages,
-    page: state.movies.page,
+const mapStateToProps = (state) => ({
+  list: state.movies.list,
+  totalPages: state.movies.totalPages,
+  page: state.movies.page
 });
 
-export default connect(
-    mapStateToProps,
-    { getMovies, setMovieType, setResponsePageNumber, clearMovieDetails, searchResult, searchQuery, }
-)(Header);
+export default connect(mapStateToProps, {
+  getMovies,
+  setMovieType,
+  setResponsePageNumber,
+  clearMovieDetails,
+  searchResult,
+  searchQuery
+})(Header);

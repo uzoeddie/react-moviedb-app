@@ -1,36 +1,58 @@
+orbs:
+  slack: circleci/slack@3.2.0
 version: 2.1
+executors:
+  app-executor:
+    docker:
+      - image: circleci/node:12.14.1
+    working_directory: ~/repo
 
 jobs:
   build:
-    docker:
-      - image: circleci/node:12.14.1
-
-    working_directory: ~/repo
-
+    executor: app-executor
     steps:
       - checkout
+      - run:
+          name: Show Current Branch
+          command: echo ${CIRCLE_BRANCH}
       - restore_cache:
           keys:
             - app-{{ checksum "package.json" }}
             # fallback to using the latest cache if no exact match is found
             - app-
-      - run: 
+      - run:
           name: Install Dependencies
           command: npm install
       - save_cache: # Save node_modules into cache with a checksum of the package.json
           paths:
             - node_modules
           key: app-{{ checksum "package.json" }}
+      - run:
+          name: Run Linting
+          command: npm run lint
+      - slack/notify:
+          message: 'Building source code is complete for branch ${CIRCLE_BRANCH}'
+          webhook: $DEV_SLACK_WEBHOOK
+      - slack/status:
+          webhook: $DEV_SLACK_WEBHOOK
+
+  build-docker:
+    executor: app-executor
+    steps:
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run: docker info
+      - run: docker login -u "${DOCKER_USERNAME}" -p "${DOCKER_PASSWORD}"
 
   deploy:
-    docker:
-      - image: circleci/node:12.14.1
-    working_directory: ~/repo
+    executor: app-executor
+    environment:
+      IMAGE_NAME: uzoeddie/movie-db
     steps:
       - checkout
       # Log the current branch
       - run:
-          name: Show current branch
+          name: Show Current Branch
           command: echo ${CIRCLE_BRANCH}
       - run:
           name: Installing AWS CLI
@@ -48,8 +70,20 @@ jobs:
             cd build       # My react app generate a build folder
             zip ../build.zip -r * .[^.]* # Just zip your files
             echo "Successfully building"
+      - run: docker build -t ${IMAGE_NAME}:latest .
       - run:
-          name: Deploying Client to S3
+          name: Tag Docker Image
+          command: docker tag ${IMAGE_NAME}:${CIRCLE_BRANCH}:latest
+      - run:
+          name: Push Image to Docker Hub
+          command: docker push ${IMAGE_NAME}:${CIRCLE_BRANCH}:latest
+      - slack/notify:
+          message: 'Docket image push is complete.'
+          webhook: $DEV_SLACK_WEBHOOK
+      - slack/status:
+          webhook: $DEV_SLACK_WEBHOOK
+      - run:
+          name: Deploying Client to AWS S3 and Cloudfront
           command: |
             aws configure set preview.cloudfront true  # Turn on cloudfront in AWS CLI
             if [ "${CIRCLE_BRANCH}" == "master" ]  # Check current branch to decide to which S3 bucket deploy
@@ -62,21 +96,36 @@ jobs:
               aws --region ${AWS_REGION} s3 sync ~/repo/build s3://react-moviedb-dev --delete
               aws cloudfront create-invalidation --distribution-id ${DEV_DISTRIBUTION_ID} --paths /\*
             fi
+      - slack/notify:
+          message: 'Deployment to AWS S3 and Cloudfront is completed.'
+          webhook: $DEV_SLACK_WEBHOOK
+      - slack/status:
+          webhook: $DEV_SLACK_WEBHOOK
 
 workflows:
   version: 2
   # The build and deploy workflow
   build_and_deploy:
-      jobs:
-          - build
-          # The deploy job will only run on the filtered branches and
-          # require the build job to be successful before it starts
-          - deploy:
-              requires:
-                  - build
-              filters:
-                  branches:
-                      only:
-                          - develop
-                          - staging
-                          - master
+    jobs:
+        - build
+        - build-docker:
+            requires:
+              - build
+            filters:
+              branches:
+                only:
+                  - develop
+                  - staging
+                  - master
+        # The deploy job will only run on the filtered branches and
+        # require the build job to be successful before it starts
+        - deploy:
+            requires:
+              - build
+              - build-docker
+            filters:
+              branches:
+                only:
+                  - develop
+                  - staging
+                  - master
