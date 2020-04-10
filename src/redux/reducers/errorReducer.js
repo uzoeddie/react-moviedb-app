@@ -1,6 +1,6 @@
-import { SET_ERROR } from "../types";
+import { SET_ERROR } from '../types';
 
-const initialState = "";
+const initialState = '';
 
 export default (state = initialState, action) => {
   switch (action.type) {

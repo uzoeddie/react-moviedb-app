@@ -1,10 +1,10 @@
-import React, { useState, useEffect, Fragment } from "react";
-import { connect } from "react-redux";
-import PropTypes from "prop-types";
+import React, { useState, useEffect, Fragment } from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
-import "./SearchResult.scss";
-import { IMAGE_URL } from "../../services/movies.service";
-import LazyImage from "../content/lazy-image/LazyImage";
+import './SearchResult.scss';
+import { IMAGE_URL } from '../../services/movies.service';
+import LazyImage from '../content/lazy-image/LazyImage';
 
 const SearchResult = (props) => {
   const { searchResult, searchQuery } = props;
@@ -17,7 +17,7 @@ const SearchResult = (props) => {
   return (
     <>
       <div className="grid-search-title">
-        <span className="grid-text1">Your search keyword:</span>{" "}
+        <span className="grid-text1">Your search keyword:</span>{' '}
         <span className="grid-text2">{searchQuery}</span>
       </div>
       <div className="grid">
@@ -50,12 +50,12 @@ const SearchResult = (props) => {
 
 SearchResult.propTypes = {
   searchResult: PropTypes.array,
-  searchQuery: PropTypes.string,
+  searchQuery: PropTypes.string
 };
 
 const mapStateToProps = (state) => ({
   searchResult: state.movies.searchResult,
-  searchQuery: state.movies.searchQuery,
+  searchQuery: state.movies.searchQuery
 });
 
 export default connect(mapStateToProps, {})(SearchResult);

@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useRef } from "react";
-import { connect } from "react-redux";
-import PropTypes from "prop-types";
+import React, { useState, useEffect, useRef } from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
-import "./Main.scss";
-import MainContent from "../content/main-content/MainContent";
-import SearchResult from "../search/SearchResult";
-import Spinner from "../loader/Spinner";
-import { setResponsePageNumber, loadMoreMovies } from "../../redux/actions/movies";
+import './Main.scss';
+import MainContent from '../content/main-content/MainContent';
+import SearchResult from '../search/SearchResult';
+import Spinner from '../loader/Spinner';
+import { setResponsePageNumber, loadMoreMovies } from '../../redux/actions/movies';
 
 const Main = (props) => {
   const { searchResult, totalPages, page, setResponsePageNumber, loadMoreMovies } = props;
@@ -25,7 +25,7 @@ const Main = (props) => {
 
   useEffect(() => {
     setResponsePageNumber(currentPage, totalPages);
-    loadMoreMovies("now_playing", currentPage);
+    loadMoreMovies('now_playing', currentPage);
 
     // eslint-disable-next-line
   }, [currentPage, searchResult]);
@@ -37,7 +37,7 @@ const Main = (props) => {
 
     if (page >= totalPages) {
       setNoMoreData(true);
-      loadMoreMovies("now_playing", currentPage);
+      loadMoreMovies('now_playing', currentPage);
     } else {
       setCurrentPage((prev) => prev + 1);
     }
@@ -76,14 +76,14 @@ Main.propTypes = {
   page: PropTypes.number,
   list: PropTypes.array,
   setResponsePageNumber: PropTypes.func,
-  loadMoreMovies: PropTypes.func,
+  loadMoreMovies: PropTypes.func
 };
 
 const mapStateToProps = (state) => ({
   searchResult: state.movies.searchResult,
   list: state.movies.list,
   totalPages: state.movies.totalPages,
-  page: state.movies.page,
+  page: state.movies.page
 });
 
 export default connect(mapStateToProps, { setResponsePageNumber, loadMoreMovies })(Main);

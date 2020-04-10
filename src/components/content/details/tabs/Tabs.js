@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import PropTypes from "prop-types";
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 
-import "./Tabs.scss";
-import Tab from "./Tab";
+import './Tabs.scss';
+import Tab from './Tab';
 
 const Tabs = (props) => {
   const { children } = props;
@@ -31,7 +31,7 @@ const Tabs = (props) => {
 };
 
 Tabs.propTypes = {
-  children: PropTypes.instanceOf(Array).isRequired,
+  children: PropTypes.instanceOf(Array).isRequired
 };
 
 export default Tabs;

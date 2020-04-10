@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import { connect } from "react-redux";
-import PropTypes from "prop-types";
+import React, { useState } from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
-import "./Reviews.scss";
+import './Reviews.scss';
 
 const Reviews = (props) => {
   const { movie } = props;
@@ -12,7 +12,7 @@ const Reviews = (props) => {
     <>
       <div className="movie-reviews">
         <div className="div-title">
-          Reviews {reviews.results.length > 0 ? reviews.results.length : ""}
+          Reviews {reviews.results.length > 0 ? reviews.results.length : ''}
         </div>
         {reviews.results.length ? (
           reviews.results.map((data) => (
@@ -30,11 +30,11 @@ const Reviews = (props) => {
 };
 
 Reviews.propTypes = {
-  movie: PropTypes.array,
+  movie: PropTypes.array
 };
 
 const mapStateToProps = (state) => ({
-  movie: state.movies.movie,
+  movie: state.movies.movie
 });
 
 export default connect(mapStateToProps, {})(Reviews);

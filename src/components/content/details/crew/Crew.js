@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import { connect } from "react-redux";
-import PropTypes from "prop-types";
+import React, { useState } from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
-import "./Crew.scss";
-import { IMAGE_URL } from "../../../../services/movies.service";
+import './Crew.scss';
+import { IMAGE_URL } from '../../../../services/movies.service';
 
 const Crew = (props) => {
   const { movie } = props;
@@ -28,7 +28,7 @@ const Crew = (props) => {
                     src={
                       data.profile_path
                         ? `${IMAGE_URL}/${data.profile_path}`
-                        : "http://placehold.it/54x81"
+                        : 'http://placehold.it/54x81'
                     }
                     alt=""
                   />
@@ -46,11 +46,11 @@ const Crew = (props) => {
 };
 
 Crew.propTypes = {
-  movie: PropTypes.array,
+  movie: PropTypes.array
 };
 
 const mapStateToProps = (state) => ({
-  movie: state.movies.movie,
+  movie: state.movies.movie
 });
 
 export default connect(mapStateToProps, {})(Crew);

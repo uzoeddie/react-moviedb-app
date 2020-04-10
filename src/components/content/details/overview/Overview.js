@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { connect } from "react-redux";
-import PropTypes from "prop-types";
+import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
-import "./Overview.scss";
-import { IMAGE_URL } from "../../../../services/movies.service";
+import './Overview.scss';
+import { IMAGE_URL } from '../../../../services/movies.service';
 
 const Overview = (props) => {
   const { movie } = props;
@@ -15,34 +15,34 @@ const Overview = (props) => {
     const detailItems = [
       {
         id: 0,
-        name: "Tagline",
-        value: `${details.tagline}`,
+        name: 'Tagline',
+        value: `${details.tagline}`
       },
       {
         id: 1,
-        name: "Budget",
-        value: `${numberFormatter(details.budget, 1)}`,
+        name: 'Budget',
+        value: `${numberFormatter(details.budget, 1)}`
       },
       {
         id: 2,
-        name: "Revenue",
-        value: `${numberFormatter(details.revenue, 1)}`,
+        name: 'Revenue',
+        value: `${numberFormatter(details.revenue, 1)}`
       },
       {
         id: 3,
-        name: "Status",
-        value: `${details.status}`,
+        name: 'Status',
+        value: `${details.status}`
       },
       {
         id: 4,
-        name: "Release Date",
-        value: `${details.release_date}`,
+        name: 'Release Date',
+        value: `${details.release_date}`
       },
       {
         id: 5,
-        name: "Run Time",
-        value: `${details.runtime} min`,
-      },
+        name: 'Run Time',
+        value: `${details.runtime} min`
+      }
     ];
     setItems(detailItems);
 
@@ -51,18 +51,18 @@ const Overview = (props) => {
 
   const numberFormatter = (number, digits) => {
     const symbolArray = [
-      { value: 1, symbol: "" },
-      { value: 1e3, symbol: "K" },
-      { value: 1e6, symbol: "M" },
-      { value: 1e9, symbol: "B" },
+      { value: 1, symbol: '' },
+      { value: 1e3, symbol: 'K' },
+      { value: 1e6, symbol: 'M' },
+      { value: 1e9, symbol: 'B' }
     ];
     const regex = /\.0+$|(\.[0-9]*[1-9])0+$/;
-    let result = "";
+    let result = '';
 
     for (let i = 0; i < symbolArray.length; i++) {
       if (number >= symbolArray[i].value) {
         result =
-          (number / symbolArray[i].value).toFixed(digits).replace(regex, "$1") +
+          (number / symbolArray[i].value).toFixed(digits).replace(regex, '$1') +
           symbolArray[i].symbol;
       }
     }
@@ -85,7 +85,7 @@ const Overview = (props) => {
                       src={
                         data.profile_path
                           ? `${IMAGE_URL}/${data.profile_path}`
-                          : "http://placehold.it/54x81"
+                          : 'http://placehold.it/54x81'
                       }
                       alt=""
                     />
@@ -105,7 +105,7 @@ const Overview = (props) => {
             <div className="product-company" key={prod.id}>
               <img
                 src={
-                  prod.logo_path ? `${IMAGE_URL}/${prod.logo_path}` : "http://placehold.it/30x30"
+                  prod.logo_path ? `${IMAGE_URL}/${prod.logo_path}` : 'http://placehold.it/30x30'
                 }
                 alt=""
               />
@@ -143,11 +143,11 @@ const Overview = (props) => {
 };
 
 Overview.propTypes = {
-  movie: PropTypes.array,
+  movie: PropTypes.array
 };
 
 const mapStateToProps = (state) => ({
-  movie: state.movies.movie,
+  movie: state.movies.movie
 });
 
 export default connect(mapStateToProps, {})(Overview);

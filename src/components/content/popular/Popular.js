@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useRef, createRef } from "react";
-import { connect } from "react-redux";
-import { Link } from "react-router-dom";
-import PropTypes from "prop-types";
+import React, { useState, useEffect, useRef, createRef } from 'react';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
-import "./Popular.scss";
-import { IMAGE_URL } from "../../../services/movies.service";
+import './Popular.scss';
+import { IMAGE_URL } from '../../../services/movies.service';
 
 const Popular = (props) => {
   const { list } = props;
@@ -33,10 +33,10 @@ const Popular = (props) => {
           left: index * (300 + 25),
           top: 0,
           width: 300,
-          height: parseInt(style.height, 10),
+          height: parseInt(style.height, 10)
         };
         rects.push(rect);
-        return "";
+        return '';
       });
     }
   };
@@ -61,7 +61,7 @@ const Popular = (props) => {
           }
           if (img) {
             // change the actual image style according to new rect value
-            img.style.left = rect.left + "px";
+            img.style.left = rect.left + 'px';
           }
         }
       }
@@ -71,7 +71,7 @@ const Popular = (props) => {
 
   const formatMovieTitle = (title) => {
     const titleStr = title.toLowerCase();
-    return titleStr.replace(/ /g, "-");
+    return titleStr.replace(/ /g, '-');
   };
 
   return (
@@ -111,12 +111,12 @@ const Popular = (props) => {
 
 Popular.propTypes = {
   list: PropTypes.array,
-  movieType: PropTypes.string,
+  movieType: PropTypes.string
 };
 
 const mapStateToProps = (state) => ({
   list: state.movies.list,
-  movieType: state.movies.movieType,
+  movieType: state.movies.movieType
 });
 
 export default connect(mapStateToProps, {})(Popular);

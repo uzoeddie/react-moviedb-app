@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
+import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 
-import "./Paginate.scss";
+import './Paginate.scss';
 
 const Paginate = (props) => {
   const { currentPage, totalPages, paginate } = props;
@@ -19,14 +19,14 @@ const Paginate = (props) => {
         {page} - {totalPage}
       </span>
       <button
-        className={page > 1 ? "paginate-button" : "paginate-button disable"}
-        onClick={() => paginate("prev")}
+        className={page > 1 ? 'paginate-button' : 'paginate-button disable'}
+        onClick={() => paginate('prev')}
       >
         Prev
       </button>
       <button
-        className={page === totalPage ? "paginate-button disable" : "paginate-button"}
-        onClick={() => paginate("next")}
+        className={page === totalPage ? 'paginate-button disable' : 'paginate-button'}
+        onClick={() => paginate('next')}
       >
         Next
       </button>
@@ -37,7 +37,7 @@ const Paginate = (props) => {
 Paginate.propTypes = {
   currentPage: PropTypes.number,
   totalPages: PropTypes.number,
-  paginate: PropTypes.func,
+  paginate: PropTypes.func
 };
 
 export default Paginate;

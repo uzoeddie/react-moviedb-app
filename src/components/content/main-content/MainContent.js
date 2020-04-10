@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
-import { connect } from "react-redux";
-import PropTypes from "prop-types";
+import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
-import "./MainContent.scss";
-import Slider from "../slider/Slider";
-import Grid from "../grid/Grid";
-import { IMAGE_URL } from "../../../services/movies.service";
-import { setResponsePageNumber, getMovies } from "../../../redux/actions/movies";
-import Paginate from "../../pagination/Paginate";
+import './MainContent.scss';
+import Slider from '../slider/Slider';
+import Grid from '../grid/Grid';
+import { IMAGE_URL } from '../../../services/movies.service';
+import { setResponsePageNumber, getMovies } from '../../../redux/actions/movies';
+import Paginate from '../../pagination/Paginate';
 
 const MainContent = (props) => {
   const { list, totalPages, page, movieType, setResponsePageNumber, getMovies } = props;
@@ -18,22 +18,22 @@ const MainContent = (props) => {
   useEffect(() => {
     setCurrentPage(currentPage);
     setResponsePageNumber(currentPage, totalPages);
-    getMovies("now_playing", currentPage);
+    getMovies('now_playing', currentPage);
 
     if (randomMovies.length) {
       const IMAGES = [
         {
           id: 1,
-          url: `${IMAGE_URL}/${randomMovies[0].backdrop_path}`,
+          url: `${IMAGE_URL}/${randomMovies[0].backdrop_path}`
         },
         {
           id: 2,
-          url: `${IMAGE_URL}/${randomMovies[1].backdrop_path}`,
+          url: `${IMAGE_URL}/${randomMovies[1].backdrop_path}`
         },
         {
           id: 3,
-          url: `${IMAGE_URL}/${randomMovies[2].backdrop_path}`,
-        },
+          url: `${IMAGE_URL}/${randomMovies[2].backdrop_path}`
+        }
       ];
       setImages(IMAGES);
     }
@@ -42,7 +42,7 @@ const MainContent = (props) => {
   }, [currentPage]);
 
   const paginate = (type) => {
-    if (type === "prev" && currentPage >= 1) {
+    if (type === 'prev' && currentPage >= 1) {
       setCurrentPage((prev) => prev - 1);
     } else {
       setCurrentPage((prev) => prev + 1);
@@ -69,14 +69,14 @@ MainContent.propTypes = {
   list: PropTypes.array,
   setResponsePageNumber: PropTypes.func,
   getMovies: PropTypes.func,
-  movieType: PropTypes.string,
+  movieType: PropTypes.string
 };
 
 const mapStateToProps = (state) => ({
   list: state.movies.list,
   totalPages: state.movies.totalPages,
   page: state.movies.page,
-  movieType: state.movies.movieType,
+  movieType: state.movies.movieType
 });
 
 export default connect(mapStateToProps, { setResponsePageNumber, getMovies })(MainContent);

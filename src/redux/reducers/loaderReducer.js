@@ -1,4 +1,4 @@
-import { SET_LOADER } from "../types";
+import { SET_LOADER } from '../types';
 
 const initialState = false;
 

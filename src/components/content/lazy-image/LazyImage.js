@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
+import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 
-import placeHolder from "../../../assets/lazy_loader.gif";
+import placeHolder from '../../../assets/lazy_loader.gif';
 
 // const placeHolder = 'https://www.eliananunes.com/images/lazy_loader.gif';
 
@@ -10,11 +10,11 @@ const LazyImage = ({ src, alt, children, className }) => {
   const [imageRef, setImageRef] = useState();
 
   const onLoad = (event) => {
-    event.target.classList.add("loaded");
+    event.target.classList.add('loaded');
   };
 
   const onError = (event) => {
-    event.target.classList.add("has-error");
+    event.target.classList.add('has-error');
   };
 
   useEffect(() => {
@@ -34,7 +34,7 @@ const LazyImage = ({ src, alt, children, className }) => {
           },
           {
             threshold: 0.01,
-            rootMargin: "75%",
+            rootMargin: '75%'
           }
         );
 
@@ -73,7 +73,7 @@ LazyImage.propTypes = {
   src: PropTypes.string,
   alt: PropTypes.string,
   children: PropTypes.any,
-  className: PropTypes.string,
+  className: PropTypes.string
 };
 
 export default LazyImage;

@@ -7,8 +7,8 @@ import {
   RESPONSE_PAGE,
   MOVIE_DETAILS,
   CLEAR_MOVIE_DETAILS,
-  LOAD_MORE_RESULTS,
-} from "../types";
+  LOAD_MORE_RESULTS
+} from '../types';
 import {
   API_URL,
   SEARCH_API_URL,
@@ -16,8 +16,8 @@ import {
   MOVIE_CREDITS_URL,
   MOVIE_IMAGES_URL,
   MOVIE_VIDEOS_URL,
-  MOVIE_REVIEWS_URL,
-} from "../../services/movies.service";
+  MOVIE_REVIEWS_URL
+} from '../../services/movies.service';
 
 export const getMovies = (type, pageNumber) => async (dispatch) => {
   try {
@@ -110,7 +110,7 @@ const getMoviesRequest = async (type, pageNumber) => {
   const { results, page, total_pages } = movies.data;
   const payload = {
     page,
-    totalPages: total_pages,
+    totalPages: total_pages
   };
   return { results, payload };
 };
@@ -118,6 +118,6 @@ const getMoviesRequest = async (type, pageNumber) => {
 const dispatchMethod = (type, payload, dispatch) => {
   dispatch({
     type,
-    payload,
+    payload
   });
 };

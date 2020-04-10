@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import { connect } from "react-redux";
-import PropTypes from "prop-types";
+import React, { useState } from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
-import "./Media.scss";
-import { IMAGE_URL } from "../../../../services/movies.service";
+import './Media.scss';
+import { IMAGE_URL } from '../../../../services/movies.service';
 
 const Media = (props) => {
   const { movie } = props;
@@ -21,8 +21,8 @@ const Media = (props) => {
                 <iframe
                   title={data.name}
                   style={{
-                    width: "100%",
-                    height: "100%",
+                    width: '100%',
+                    height: '100%'
                   }}
                   src={`https://www.youtube.com/embed/${data.key}`}
                   frameBorder="0"
@@ -40,7 +40,7 @@ const Media = (props) => {
                 key={i}
                 className="image-cell"
                 style={{
-                  backgroundImage: `url(${IMAGE_URL}/${data.file_path})`,
+                  backgroundImage: `url(${IMAGE_URL}/${data.file_path})`
                 }}
               ></div>
             ))}
@@ -52,11 +52,11 @@ const Media = (props) => {
 };
 
 Media.propTypes = {
-  movie: PropTypes.array,
+  movie: PropTypes.array
 };
 
 const mapStateToProps = (state) => ({
-  movie: state.movies.movie,
+  movie: state.movies.movie
 });
 
 export default connect(mapStateToProps, {})(Media);

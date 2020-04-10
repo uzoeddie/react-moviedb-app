@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
-import { connect } from "react-redux";
-import { Link } from "react-router-dom";
-import { v4 as uuidv4 } from "uuid";
-import PropTypes from "prop-types";
+import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
+import PropTypes from 'prop-types';
 
-import "./Grid.scss";
-import { IMAGE_URL } from "../../../services/movies.service";
-import Rating from "../rating/Rating";
-import LazyImage from "../lazy-image/LazyImage";
+import './Grid.scss';
+import { IMAGE_URL } from '../../../services/movies.service';
+import Rating from '../rating/Rating';
+import LazyImage from '../lazy-image/LazyImage';
 
 const Grid = (props) => {
   const { list } = props;
@@ -21,7 +21,7 @@ const Grid = (props) => {
 
   const formatMovieTitle = (title) => {
     const titleStr = title.toLowerCase();
-    return titleStr.replace(/ /g, "-");
+    return titleStr.replace(/ /g, '-');
   };
 
   return (
@@ -57,12 +57,12 @@ const Grid = (props) => {
 
 Grid.propTypes = {
   list: PropTypes.array,
-  movieType: PropTypes.string,
+  movieType: PropTypes.string
 };
 
 const mapStateToProps = (state) => ({
   list: state.movies.list,
-  movieType: state.movies.movieType,
+  movieType: state.movies.movieType
 });
 
 export default connect(mapStateToProps, {})(Grid);

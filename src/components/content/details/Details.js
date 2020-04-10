@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { connect } from "react-redux";
-import PropTypes from "prop-types";
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
-import "./Details.scss";
-import { IMAGE_URL } from "../../../services/movies.service";
-import Overview from "./overview/Overview";
-import Tabs from "./tabs/Tabs";
-import { movieDetails } from "../../../redux/actions/movies";
-import Rating from "../rating/Rating";
-import Crew from "./crew/Crew";
-import Media from "./media/Media";
-import Reviews from "./reviews/Reviews";
+import './Details.scss';
+import { IMAGE_URL } from '../../../services/movies.service';
+import Overview from './overview/Overview';
+import Tabs from './tabs/Tabs';
+import { movieDetails } from '../../../redux/actions/movies';
+import Rating from '../rating/Rating';
+import Crew from './crew/Crew';
+import Media from './media/Media';
+import Reviews from './reviews/Reviews';
 
 const Details = (props) => {
   const { movieDetails, movie } = props;
@@ -51,7 +51,7 @@ const Details = (props) => {
                   </ul>
                 </div>
                 <div className="rating">
-                  <Rating className="rating-stars" rating={details.vote_average} totalStars={10} />{" "}
+                  <Rating className="rating-stars" rating={details.vote_average} totalStars={10} />{' '}
                   &nbsp;
                   <span>{details.vote_average}</span> <p>({details.vote_count} reviews)</p>
                 </div>
@@ -80,11 +80,11 @@ const Details = (props) => {
 
 Details.propTypes = {
   movie: PropTypes.array,
-  movieDetails: PropTypes.func,
+  movieDetails: PropTypes.func
 };
 
 const mapStateToProps = (state) => ({
-  movie: state.movies.movie,
+  movie: state.movies.movie
 });
 
 export default connect(mapStateToProps, { movieDetails })(Details);
