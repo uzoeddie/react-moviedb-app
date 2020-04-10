@@ -23,23 +23,32 @@
 .media-images {
     grid-area: images;
     display: grid;
-    grid-template-columns: max-content max-content max-content max-content;
-    grid-template-rows: 1fr 1fr 1fr 1fr;
-    grid-gap: 10px 10px;
+    grid-template-columns: repeat(auto-fill, minmax(330px, auto));
+    row-gap: 1rem;
+    column-gap: 0.5rem;
+
     
     .image-cell {
+        width: 330px;
+        height: 550px;
+        transition: all 500ms;
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
     }
 }
 
+.image-cell:hover {
+    box-shadow: rgba(2, 8, 20, 0.1) 0px 0.35em 1.175em, rgba(2, 8, 20, 0.08) 0px 0.175em 0.5em;
+    transform: translateY(-3px) scale(1.1);
+}
+
 .media-videos {
     grid-area: videos;
-
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-column-gap: 10px;
+    grid-template-columns: repeat(auto-fill, minmax(330px, auto));
+    row-gap: 1rem;
+    column-gap: 1rem;
     
     .video {
         height: 313px;

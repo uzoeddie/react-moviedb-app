@@ -42,15 +42,17 @@ const Details = (props) => {
                             <div className="title">
                                 {details.title} <span>{details.release_date}</span>
                             </div>
-                            <div className="genres">
-                                {
-                                    details && details.genres.map(genre =>
-                                        <span key={genre.id}>{genre.name}</span>
-                                    )
-                                }
+                            <div className="movie-genres">
+                                <ul className="genres">
+                                    {
+                                        details && details.genres.map(genre =>
+                                            <li key={genre.id}>{genre.name}</li>
+                                        )
+                                    }
+                                </ul>
                             </div>
                             <div className="rating">
-                                <Rating rating={details.vote_average} totalStars={10} /> &nbsp;
+                                <Rating className="rating-stars" rating={details.vote_average} totalStars={10} /> &nbsp;
                                 <span>{details.vote_average}</span> <p>({details.vote_count} reviews)</p> 
                             </div>
                             <Tabs>
