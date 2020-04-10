@@ -39,6 +39,9 @@ jobs:
   build-docker:
     executor: app-executor
     steps:
+      - run:
+          name: Install Docker client
+          command: apk add docker-cli
       - run: docker info
       - run: docker login -u "${DOCKER_USERNAME}" -p "${DOCKER_PASSWORD}"
 
