@@ -42,12 +42,10 @@ const Media = props => {
                         {
                             media.posters.map((data, i) =>
                                 <div key={i} className="image-cell" 
-                                style={{
-                                    backgroundImage: `url(${IMAGE_URL}/${data.file_path})`,
-                                    width: '300px',
-                                    height: '300px',
-                                }}
-                            ></div>
+                                    style={{
+                                        backgroundImage: `url(${IMAGE_URL}/${data.file_path})`,
+                                    }}
+                                ></div>
                             )
                         }
                     </div>

@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState, Fragment } from 'react';
 
 import './Rating.scss';
 
-const Rating = ({ rating, totalStars }) => {
+const Rating = ({ rating, totalStars, className }) => {
     const ratingRef = useRef();
     const [numberStars, setNumberStars] = useState();
 
@@ -20,7 +20,7 @@ const Rating = ({ rating, totalStars }) => {
 
     return (
         <div className="star-rating">
-            <div className="back-stars">
+            <div className={`back-stars ${className}`}>
                 {
                     numberStars && numberStars.map((i) =>
                         <Fragment key={i}>
@@ -29,7 +29,7 @@ const Rating = ({ rating, totalStars }) => {
                     )
                 }
                 
-                <div className="front-stars" ref={ratingRef}>
+                <div className={`front-stars ${className}`} ref={ratingRef}>
                     {
                         numberStars && numberStars.map((j) =>
                             <Fragment key={j}>

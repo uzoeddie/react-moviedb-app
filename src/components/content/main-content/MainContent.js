@@ -7,7 +7,6 @@ import Grid from '../grid/Grid';
 import { IMAGE_URL } from '../../../services/movies.service';
 import { setResponsePageNumber, getMovies } from '../../../redux/actions/movies';
 import Paginate from '../../pagination/Paginate';
-// import Popular from '../popular/Popular';
 
 const MainContent = (props) => {
     const { 
@@ -65,7 +64,6 @@ const MainContent = (props) => {
                 showArrows={true}
                 images={images}
             />
-            {/* <Popular /> */}
             <div className="grid-movie-title">
                 <div className="movieType">{movieType}</div>
                 <div className="paginate"><Paginate currentPage={currentPage} totalPages={totalPages} paginate={paginate} /></div>

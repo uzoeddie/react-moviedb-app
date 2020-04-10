@@ -2,13 +2,10 @@ import React, { useState } from 'react';
 import { connect } from 'react-redux';
 
 import './Reviews.scss'
-// import { IMAGE_URL } from '../../../../services/movies.service';
 
 const Reviews = props => {
     const { movie } = props;
     const [reviews] = useState(movie[4]);
-    console.log(reviews)
-
 
     return (
         <>
