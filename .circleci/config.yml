@@ -6,6 +6,12 @@ executors:
     docker:
       - image: circleci/node:12.14.1
     working_directory: ~/repo
+  general-executor:
+    docker:
+      - environment:
+          TERM: dumb
+        image: 'cibuilds/base:latest'
+    resource_class: small
 
 jobs:
   build:
@@ -13,7 +19,7 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Show Current Branch
+          name: Show current branch
           command: echo ${CIRCLE_BRANCH}
       - restore_cache:
           keys:
@@ -27,28 +33,20 @@ jobs:
           paths:
             - node_modules
           key: app-{{ checksum "package.json" }}
-      - run:
-          name: Run Linting
-          command: npm run lint
-      - slack/notify:
-          message: 'Building source code is complete for branch ${CIRCLE_BRANCH}'
-          webhook: $DEV_SLACK_WEBHOOK
-      - slack/status:
-          webhook: $DEV_SLACK_WEBHOOK
 
-  build-docker:
+  linting:
     executor: app-executor
     steps:
+      - checkout
       - run:
-          name: Install Docker client
-          command: sudo apt-get install docker-cli
-      - run: docker info
-      - run: docker login -u "${DOCKER_USERNAME}" -p "${DOCKER_PASSWORD}"
+          name: Show current branch
+          command: echo ${CIRCLE_BRANCH}
+      - run:
+          name: Run linting
+          command: npm run lint
 
-  deploy:
+  deploy-to-aws-s3:
     executor: app-executor
-    environment:
-      IMAGE_NAME: uzoeddie/movie-db
     steps:
       - checkout
       # Log the current branch
@@ -71,22 +69,9 @@ jobs:
             cd build       # My react app generate a build folder
             zip ../build.zip -r * .[^.]* # Just zip your files
             echo "Successfully building"
-      - run: docker build -t ${IMAGE_NAME}:latest .
       - run:
-          name: Tag Docker Image
-          command: docker tag ${IMAGE_NAME}:${CIRCLE_BRANCH}:latest
-      - run:
-          name: Push Image to Docker Hub
-          command: docker push ${IMAGE_NAME}:${CIRCLE_BRANCH}:latest
-      - slack/notify:
-          message: 'Docket image push is complete.'
-          webhook: $DEV_SLACK_WEBHOOK
-      - slack/status:
-          webhook: $DEV_SLACK_WEBHOOK
-      - run:
-          name: Deploying Client to AWS S3 and Cloudfront
+          name: Deploying to AWS S3
           command: |
-            aws configure set preview.cloudfront true  # Turn on cloudfront in AWS CLI
             if [ "${CIRCLE_BRANCH}" == "master" ]  # Check current branch to decide to which S3 bucket deploy
             then
               aws --region ${AWS_REGION} s3 sync ~/repo/build s3://react-moviedb --delete
@@ -95,38 +80,88 @@ jobs:
               aws --region ${AWS_REGION} s3 sync ~/repo/build s3://react-moviedb-staging --delete
             else
               aws --region ${AWS_REGION} s3 sync ~/repo/build s3://react-moviedb-dev --delete
+            fi
+
+  deploy-to-aws-cloudfront:
+    executor: app-executor
+    steps:
+      - checkout
+      # Log the current branch
+      - run:
+          name: Show Current Branch
+          command: echo ${CIRCLE_BRANCH}
+      - run:
+          name: Deploying to AWS Cloudfront
+          command: |
+            aws configure set preview.cloudfront true  # Turn on cloudfront in AWS CLI
+            if [ "${CIRCLE_BRANCH}" == "master" ]  # Check current branch to decide to which S3 bucket deploy
+            then
+              aws cloudfront create-invalidation --distribution-id ${PRODDUCTION_DISTRIBUTION_ID} --paths /\*
+            elif [ "${CIRCLE_BRANCH}" == "staging" ]
+            then
+              aws cloudfront create-invalidation --distribution-id ${STAGING_DISTRIBUTION_ID} --paths /\*
+            else
               aws cloudfront create-invalidation --distribution-id ${DEV_DISTRIBUTION_ID} --paths /\*
             fi
+
+  notify-via-slack:
+    executor: general-executor
+    steps:
       - slack/notify:
-          message: 'Deployment to AWS S3 and Cloudfront is completed.'
+          message: '${CIRCLE_BRANCH} branch deployment to aws s3 and cloudfront is complete.'
           webhook: $DEV_SLACK_WEBHOOK
       - slack/status:
           webhook: $DEV_SLACK_WEBHOOK
 
 workflows:
-  version: 2
   # The build and deploy workflow
   build_and_deploy:
     jobs:
-        - build
-        - build-docker:
-            requires:
-              - build
-            filters:
-              branches:
-                only:
-                  - develop
-                  - staging
-                  - master
-        # The deploy job will only run on the filtered branches and
-        # require the build job to be successful before it starts
-        - deploy:
-            requires:
-              - build
-              - build-docker
-            filters:
-              branches:
-                only:
-                  - develop
-                  - staging
-                  - master
+      - build
+      - linting:
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - develop
+                - staging
+                - master
+      - deploy-to-aws-s3:
+          requires:
+            - linting
+          filters:
+            branches:
+              only:
+                - develop
+                - staging
+                - master
+      - deploy-to-aws-cloudfront:
+          requires:
+            - deploy-to-aws-s3
+          filters:
+            branches:
+              only:
+                - develop
+                - staging
+                - master
+      - notify-via-slack:
+          requires:
+            - deploy-to-aws-cloudfront
+          filters:
+            branches:
+              only:
+                - develop
+                - staging
+                - master
+      # The deploy job will only run on the filtered branches and
+      # require the build job to be successful before it starts
+      # - deploy:
+      #     requires:
+      #       - build
+      #     filters:
+      #       branches:
+      #         only:
+      #           - develop
+      #           - staging
+      #           - master
