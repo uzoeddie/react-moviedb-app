@@ -13,46 +13,63 @@ executors:
         image: 'cibuilds/base:latest'
     resource_class: small
 
+aliases:
+  - &show-current-directory-name
+    run:
+      name: Show Current Branch
+      command: echo ${CIRCLE_BRANCH}
+  - &restore-cache
+    restore_cache:
+      keys:
+        - app-{{ checksum "package.json" }}
+        # fallback to using the latest cache if no exact match is found
+        - app-
+  - &install-dependencies
+    run:
+      name: Install Dependencies
+      command: npm install
+  - &save-cache
+    save_cache: # Save node_modules into cache with a checksum of the package.json
+      paths:
+        - node_modules
+      key: app-{{ checksum "package.json" }}
+  - &install-aws-cli
+    run:
+      name: Installing AWS CLI
+      working_directory: /
+      command: |
+        sudo apt-get -y -qq update
+        sudo apt-get install -y awscli
+        sudo apt-get install -y python-pip python-dev build-essential
+        sudo pip install awsebcli --upgrade
+  - &prepare-build-artifact
+    run:
+      name: Preparing Artifact
+      command: |
+        npm install
+        npm run build # Here goes your build command.
+        cd build       # My react app generate a build folder
+        zip ../build.zip -r * .[^.]* # Just zip your files
+        echo "Successfully building"
+
 jobs:
   build:
     executor: app-executor
     steps:
       - checkout
-      - run:
-          name: Show current branch
-          command: echo ${CIRCLE_BRANCH}
-      - restore_cache:
-          keys:
-            - app-{{ checksum "package.json" }}
-            # fallback to using the latest cache if no exact match is found
-            - app-
-      - run:
-          name: Install Dependencies
-          command: npm install
-      - save_cache: # Save node_modules into cache with a checksum of the package.json
-          paths:
-            - node_modules
-          key: app-{{ checksum "package.json" }}
+      - *show-current-directory-name
+      - *restore-cache
+      - *install-dependencies
+      - *save-cache
 
   linting:
     executor: app-executor
     steps:
       - checkout
-      - run:
-          name: Show current branch
-          command: echo ${CIRCLE_BRANCH}
-      - restore_cache:
-          keys:
-            - app-{{ checksum "package.json" }}
-            # fallback to using the latest cache if no exact match is found
-            - app-
-      - run:
-          name: Install Dependencies
-          command: npm install
-      - save_cache: # Save node_modules into cache with a checksum of the package.json
-          paths:
-            - node_modules
-          key: app-{{ checksum "package.json" }}
+      - *show-current-directory-name
+      - *restore-cache
+      - *install-dependencies
+      - *save-cache
       - run:
           name: Run linting
           command: npm run lint
@@ -61,26 +78,9 @@ jobs:
     executor: app-executor
     steps:
       - checkout
-      # Log the current branch
-      - run:
-          name: Show Current Branch
-          command: echo ${CIRCLE_BRANCH}
-      - run:
-          name: Installing AWS CLI
-          working_directory: /
-          command: |
-            sudo apt-get -y -qq update
-            sudo apt-get install -y awscli
-            sudo apt-get install -y python-pip python-dev build-essential
-            sudo pip install awsebcli --upgrade
-      - run:
-          name: Preparing Artifact
-          command: |
-            npm install
-            npm run build # Here goes your build command.
-            cd build       # My react app generate a build folder
-            zip ../build.zip -r * .[^.]* # Just zip your files
-            echo "Successfully building"
+      - *show-current-directory-name
+      - *install-aws-cli
+      - *prepare-build-artifact
       - run:
           name: Deploying to AWS S3
           command: |
@@ -98,10 +98,9 @@ jobs:
     executor: app-executor
     steps:
       - checkout
-      # Log the current branch
-      - run:
-          name: Show Current Branch
-          command: echo ${CIRCLE_BRANCH}
+      - *show-current-directory-name
+      - *install-aws-cli
+      - *prepare-build-artifact
       - run:
           name: Deploying to AWS Cloudfront
           command: |

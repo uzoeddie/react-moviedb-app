@@ -12,6 +12,7 @@ import {
   searchResult,
   searchQuery
 } from '../../redux/actions/movies';
+import logo from '../../assets/movie-logo.svg';
 
 const HEADER_LIST = [
   {
@@ -104,8 +105,12 @@ const Header = (props) => {
         <div className="grad-bar"></div>
         <div className="header-navbar">
           <div className="header-image" onClick={() => navigateToHomePage()}>
-            <img
+            {/* <img
               src="https://upload.wikimedia.org/wikipedia/en/thumb/c/c8/Bluestar_%28bus_company%29_logo.svg/1280px-Bluestar_%28bus_company%29_logo.svg.png"
+              alt=""
+            /> */}
+            <img
+              src={logo}
               alt=""
             />
           </div>
