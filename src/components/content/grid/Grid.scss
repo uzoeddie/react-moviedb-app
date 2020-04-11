@@ -42,22 +42,21 @@
   display: none;
 
   .grid-cell-button {
-      background-color: #dd003f;
-      padding: 8px 15px;
-      text-transform: uppercase;
-      color: #ffffff;
-      border: none;
-      border-radius: 30px;
-      font-weight: bold;
-      outline: none;
+    background-color: #dd003f;
+    padding: 8px 15px;
+    text-transform: uppercase;
+    color: #ffffff;
+    border: none;
+    border-radius: 30px;
+    font-weight: bold;
+    outline: none;
 
-      a {
-          color: white;
-          text-decoration: none;
-      }
+    a {
+      color: white;
+      text-decoration: none;
+    }
   }
 }
-
 
 .grid-detail {
   position: absolute;
@@ -71,19 +70,19 @@
   text-align: left;
 
   .grid-title {
-      font-size: 14px;
-      font-weight: 700;
-      text-transform: uppercase;
-      color: #ffffff;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #ffffff;
   }
 
   .grid-rating {
-      padding-top: 4px;
-      display: flex;
+    padding-top: 4px;
+    display: flex;
 
-      .grid-vote-average {
-          color: #ffffff;
-          margin-top: -3px;
-      }
+    .grid-vote-average {
+      color: #ffffff;
+      margin-top: -3px;
+    }
   }
 }

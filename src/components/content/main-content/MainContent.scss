@@ -13,15 +13,15 @@
   width: inherit;
 
   .movieType {
-      grid-area: movieType;
-      text-align: left;
-      padding: 8px 25px;
+    grid-area: movieType;
+    text-align: left;
+    padding: 8px 25px;
   }
 
   .paginate {
-      grid-area: paginate;
-      text-align: right;
-      padding-right: 25px;
+    grid-area: paginate;
+    text-align: right;
+    padding-right: 25px;
   }
 }
 

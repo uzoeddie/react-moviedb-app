@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import './Header.scss';
@@ -56,23 +56,37 @@ const Header = (props) => {
   let [navClass, setNavClass] = useState(false);
   let [menuClass, setMenuClass] = useState(false);
   const [search, setSearch] = useState('');
+  const [disableSearch, setDisableSearch] = useState(false);
   const menuRef = useRef();
-
   const history = useHistory();
+  const location = useLocation();
 
   useEffect(() => {
     getMovies(type, page);
     setResponsePageNumber(page, totalPages);
 
+    if (location.pathname !== '/') {
+      setDisableSearch(true);
+    }
+
     // eslint-disable-next-line
-  }, [type]);
+  }, [type, location, disableSearch]);
 
   const setMovieUrlType = (type, name) => {
-    setType(type);
-    setMovieType(name);
+    setDisableSearch(false);
+    if (location.pathname !== '/') {
+      clearMovieDetails();
+      history.push('/');
+      setType('now_playing');
+      setMovieType('Now Playing');
+    } else {
+      setType(type);
+      setMovieType(name);
+    }
   };
 
   const navigateToHomePage = () => {
+    setDisableSearch(false);
     clearMovieDetails();
     history.push('/');
   };
@@ -105,14 +119,7 @@ const Header = (props) => {
         <div className="grad-bar"></div>
         <div className="header-navbar">
           <div className="header-image" onClick={() => navigateToHomePage()}>
-            {/* <img
-              src="https://upload.wikimedia.org/wikipedia/en/thumb/c/c8/Bluestar_%28bus_company%29_logo.svg/1280px-Bluestar_%28bus_company%29_logo.svg.png"
-              alt=""
-            /> */}
-            <img
-              src={logo}
-              alt=""
-            />
+            <img src={logo} alt="" />
           </div>
           <div
             className={`${menuClass ? 'header-menu-toggle is-active' : 'header-menu-toggle'}`}
@@ -139,7 +146,7 @@ const Header = (props) => {
               </li>
             ))}
             <input
-              className="search-input"
+              className={`search-input ${disableSearch ? 'disabled' : ''}`}
               type="text"
               value={search}
               onChange={onSearchChange}

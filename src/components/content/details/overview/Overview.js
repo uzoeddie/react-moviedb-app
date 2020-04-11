@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { v4 as uuidv4 } from 'uuid';
 
 import './Overview.scss';
 import { IMAGE_URL } from '../../../../services/movies.service';
@@ -78,7 +79,7 @@ const Overview = (props) => {
           <div className="div-title">Cast</div>
           <table>
             {credits.cast.map((data) => (
-              <tbody key={data.id}>
+              <tbody key={uuidv4()}>
                 <tr>
                   <td>
                     <img

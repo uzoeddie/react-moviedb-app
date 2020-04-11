@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { v4 as uuidv4 } from 'uuid';
 
 import './Reviews.scss';
 
@@ -16,7 +17,7 @@ const Reviews = (props) => {
         </div>
         {reviews.results.length ? (
           reviews.results.map((data) => (
-            <div className="reviews" key={data.id}>
+            <div className="reviews" key={uuidv4()}>
               <h3>{data.author}</h3>
               <div>{data.content}</div>
             </div>
