@@ -3,11 +3,11 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import './MainContent.scss';
-import Slider from '../slider/Slider';
 import Grid from '../grid/Grid';
 import { IMAGE_URL } from '../../../services/movies.service';
 import { setResponsePageNumber, getMovies } from '../../../redux/actions/movies';
 import Paginate from '../../pagination/Paginate';
+import SlideShow from '../slide/SlideShow';
 
 const MainContent = (props) => {
   const { list, totalPages, page, movieType, setResponsePageNumber, getMovies } = props;
@@ -51,7 +51,7 @@ const MainContent = (props) => {
 
   return (
     <div className="main-content">
-      <Slider loop={true} showNav={true} showArrows={true} images={images} />
+      <SlideShow images={images} auto={true} />
       <div className="grid-movie-title">
         <div className="movieType">{movieType}</div>
         <div className="paginate">
