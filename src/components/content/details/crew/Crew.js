@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { v4 as uuidv4 } from 'uuid';
 
 import './Crew.scss';
 import { IMAGE_URL } from '../../../../services/movies.service';
@@ -14,14 +15,16 @@ const Crew = (props) => {
       <div className="cast">
         <div className="div-title">Crew</div>
         <table>
-          <tr>
-            <th></th>
-            <th></th>
-            <th className="head">Department</th>
-            <th className="head">Job</th>
-          </tr>
+          <thead>
+            <tr>
+              <th></th>
+              <th></th>
+              <th className="head">Department</th>
+              <th className="head">Job</th>
+            </tr>
+          </thead>
           {credits.crew.map((data) => (
-            <tbody key={data.id}>
+            <tbody key={uuidv4()}>
               <tr>
                 <td>
                   <img
