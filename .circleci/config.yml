@@ -193,7 +193,7 @@ workflows:
                 - develop
       - deploy-to-aws-s3:
           requires:
-            - test
+            - hold
           filters:
             branches:
               only:
