@@ -165,6 +165,7 @@ workflows:
       - prettier:
           requires:
             - build
+            - linting
           filters:
             branches:
               only:
@@ -173,7 +174,7 @@ workflows:
                 - master
       - test:
           requires:
-            - build
+            - prettier
           filters:
             branches:
               only:
@@ -183,9 +184,6 @@ workflows:
       - hold: # <<< A job that will require manual approval in the CircleCI web application.
           type: approval # <<< This key-value pair will set your workflow to a status of "On Hold"
           requires: # We only run the "hold" job when test has succeeded
-            - build
-            - linting
-            - prettier
             - test
           filters:
             branches:
