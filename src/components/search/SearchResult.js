@@ -24,7 +24,7 @@ const SearchResult = (props) => {
   };
 
   return (
-    <>
+    <div data-testid="searchKeyword">
       <div className="grid-search-title">
         <span className="grid-text1">Your search keyword:</span>{' '}
         <span className="grid-text2">{searchQuery}</span>
@@ -60,7 +60,7 @@ const SearchResult = (props) => {
           </Fragment>
         ))}
       </div>
-    </>
+    </div>
   );
 };
 

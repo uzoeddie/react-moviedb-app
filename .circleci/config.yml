@@ -68,14 +68,35 @@ jobs:
       - checkout
       - *show-current-directory-name
       - *restore-cache
-      - *install-dependencies
-      - *save-cache
+      # - *install-dependencies
+      # - *save-cache
       - run:
           name: Run linting
           command: npm run lint
+
+  prettier:
+    executor: app-executor
+    steps:
+      - checkout
+      - *show-current-directory-name
+      - *restore-cache
+      # - *install-dependencies
+      # - *save-cache
       - run:
           name: Run prettier check
           command: npm run prettier:check
+
+  test:
+    executor: app-executor
+    steps:
+      - checkout
+      - *show-current-directory-name
+      - *restore-cache
+      # - *install-dependencies
+      # - *save-cache
+      - run:
+          name: Run test
+          command: npm run test -- --watchAll=false
 
   deploy-to-aws-s3:
     executor: app-executor
@@ -141,9 +162,35 @@ workflows:
                 - develop
                 - staging
                 - master
+      - prettier:
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - develop
+                - staging
+                - master
+      - test:
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - develop
+                - staging
+                - master
+      - hold: # <<< A job that will require manual approval in the CircleCI web application.
+          type: approval # <<< This key-value pair will set your workflow to a status of "On Hold"
+          requires: # We only run the "hold" job when test2 has succeeded
+            - test
+          filters:
+            branches:
+              only:
+                - develop
       - deploy-to-aws-s3:
           requires:
-            - linting
+            - test
           filters:
             branches:
               only:
@@ -168,14 +215,3 @@ workflows:
                 - develop
                 - staging
                 - master
-      # The deploy job will only run on the filtered branches and
-      # require the build job to be successful before it starts
-      # - deploy:
-      #     requires:
-      #       - build
-      #     filters:
-      #       branches:
-      #         only:
-      #           - develop
-      #           - staging
-      #           - master

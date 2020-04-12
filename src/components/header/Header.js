@@ -115,7 +115,7 @@ const Header = (props) => {
 
   return (
     <>
-      <div className="header-nav-wrapper">
+      <div className="header-nav-wrapper" data-testid="header">
         <div className="grad-bar"></div>
         <div className="header-navbar">
           <div className="header-image" onClick={() => navigateToHomePage()}>
