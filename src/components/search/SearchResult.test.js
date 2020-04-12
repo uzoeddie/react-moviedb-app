@@ -16,18 +16,17 @@ describe('SearchResult Component', () => {
   useStateSpy.mockImplementation((init) => [init, setState]);
 
   beforeEach(() => {
-    store = createStore(() => (
-      {
-        movies: {
-          searchResult: [{ title: 'The Avengers' }, { title: 'Avengers: Endgame' }],
-          SearchQuery: 'avengers'
-        }
-      }));
+    store = createStore(() => ({
+      movies: {
+        searchResult: [{ title: 'The Avengers' }, { title: 'Avengers: Endgame' }],
+        SearchQuery: 'avengers'
+      }
+    }));
     const props = {
       searchResult: store.getState().movies.searchResult,
       searchQuery: store.getState().movies.SearchQuery
     };
-    result = renderWithRedux(<SearchResult { ...props } />, store);
+    result = renderWithRedux(<SearchResult {...props} />, store);
   });
 
   afterEach(() => {
@@ -44,11 +43,11 @@ describe('SearchResult Component', () => {
 function renderWithRedux(ui, store) {
   const historyMock = { push: jest.fn(), location: {}, listen: jest.fn() };
   return {
-    ...render(<Provider store={store}>
-      <Router history={historyMock}>
-        {ui}
-      </Router>
-    </Provider>),
+    ...render(
+      <Provider store={store}>
+        <Router history={historyMock}>{ui}</Router>
+      </Provider>
+    ),
     store
   };
 }
