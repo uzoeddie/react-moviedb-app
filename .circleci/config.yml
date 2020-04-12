@@ -165,7 +165,6 @@ workflows:
       - prettier:
           requires:
             - build
-            - linting
           filters:
             branches:
               only:
@@ -174,6 +173,7 @@ workflows:
                 - master
       - test:
           requires:
+            - linting
             - prettier
           filters:
             branches:
@@ -188,7 +188,7 @@ workflows:
           filters:
             branches:
               only:
-                - develop
+                - master
       - deploy-to-aws-s3:
           requires:
             - hold
