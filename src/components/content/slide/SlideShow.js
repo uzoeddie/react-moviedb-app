@@ -113,7 +113,7 @@ const SlideShow = (props) => {
 SlideShow.propTypes = {
   images: PropTypes.array.isRequired,
   auto: PropTypes.bool.isRequired,
-  currentSlide: PropTypes.number.isRequired
+  currentSlide: PropTypes.number
 };
 
 export default SlideShow;
