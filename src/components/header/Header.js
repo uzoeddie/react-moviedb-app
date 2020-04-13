@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import './Header.scss';
@@ -57,13 +57,18 @@ const Header = (props) => {
   let [menuClass, setMenuClass] = useState(false);
   const [search, setSearch] = useState('');
   const [disableSearch, setDisableSearch] = useState(false);
+  const [hideHeader, setHideHeader] = useState(false);
   const menuRef = useRef();
   const history = useHistory();
   const location = useLocation();
+  const detailsRoute = useRouteMatch('/:id/:name/details');
 
   useEffect(() => {
     getMovies(type, page);
     setResponsePageNumber(page, totalPages);
+    if (detailsRoute || location.pathname === '/') {
+      setHideHeader(true);
+    }
 
     if (location.pathname !== '/' && location.key) {
       setDisableSearch(true);
@@ -115,8 +120,8 @@ const Header = (props) => {
 
   return (
     <>
-      {location && location.key && (
-        <div className="header-nav-wrapper" data-testid="header">
+      {hideHeader && (
+        <div className="header-nav-wrapper">
           <div className="grad-bar"></div>
           <div className="header-navbar">
             <div className="header-image" onClick={() => navigateToHomePage()}>
