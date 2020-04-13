@@ -1,81 +1,218 @@
+orbs:
+  slack: circleci/slack@3.2.0
 version: 2.1
+executors:
+  app-executor:
+    docker:
+      - image: circleci/node:12.14.1
+    working_directory: ~/repo
+  general-executor:
+    docker:
+      - environment:
+          TERM: dumb
+        image: 'cibuilds/base:latest'
+    resource_class: small
+
+aliases:
+  - &show-current-directory-name
+    run:
+      name: Show Current Branch
+      command: echo ${CIRCLE_BRANCH}
+  - &restore-cache
+    restore_cache:
+      keys:
+        - app-{{ checksum "package.json" }}
+        # fallback to using the latest cache if no exact match is found
+        - app-
+  - &install-dependencies
+    run:
+      name: Install Dependencies
+      command: npm install
+  - &save-cache
+    save_cache: # Save node_modules into cache with a checksum of the package.json
+      paths:
+        - node_modules
+      key: app-{{ checksum "package.json" }}
+  - &install-aws-cli
+    run:
+      name: Installing AWS CLI
+      working_directory: /
+      command: |
+        sudo apt-get -y -qq update
+        sudo apt-get install -y awscli
+        sudo apt-get install -y python-pip python-dev build-essential
+        sudo pip install awsebcli --upgrade
+  - &prepare-build-artifact
+    run:
+      name: Preparing Artifact
+      command: |
+        npm install
+        npm run build # Here goes your build command.
+        cd build       # My react app generate a build folder
+        zip ../build.zip -r * .[^.]* # Just zip your files
+        echo "Successfully building"
 
 jobs:
   build:
-    docker:
-      - image: circleci/node:12.14.1
-
-    working_directory: ~/repo
-
+    executor: app-executor
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - app-{{ checksum "package.json" }}
-            # fallback to using the latest cache if no exact match is found
-            - app-
-      - run: 
-          name: Install Dependencies
-          command: npm install
-      - save_cache: # Save node_modules into cache with a checksum of the package.json
-          paths:
-            - node_modules
-          key: app-{{ checksum "package.json" }}
+      - *show-current-directory-name
+      - *restore-cache
+      - *install-dependencies
+      - *save-cache
 
-  deploy:
-    docker:
-      - image: circleci/node:12.14.1
-    working_directory: ~/repo
+  linting:
+    executor: app-executor
     steps:
       - checkout
-      # Log the current branch
+      - *show-current-directory-name
+      - *restore-cache
+      # - *install-dependencies
+      # - *save-cache
       - run:
-          name: Show current branch
-          command: echo ${CIRCLE_BRANCH}
+          name: Run linting
+          command: npm run lint
+
+  prettier:
+    executor: app-executor
+    steps:
+      - checkout
+      - *show-current-directory-name
+      - *restore-cache
+      # - *install-dependencies
+      # - *save-cache
       - run:
-          name: Installing AWS CLI
-          working_directory: /
+          name: Run prettier check
+          command: npm run prettier:check
+
+  test:
+    executor: app-executor
+    steps:
+      - checkout
+      - *show-current-directory-name
+      - *restore-cache
+      # - *install-dependencies
+      # - *save-cache
+      - run:
+          name: Run test
+          command: npm run test -- --watchAll=false
+
+  deploy-to-aws-s3:
+    executor: app-executor
+    steps:
+      - checkout
+      - *show-current-directory-name
+      - *install-aws-cli
+      - *prepare-build-artifact
+      - run:
+          name: Deploying to AWS S3
           command: |
-            sudo apt-get -y -qq update
-            sudo apt-get install -y awscli
-            sudo apt-get install -y python-pip python-dev build-essential
-            sudo pip install awsebcli --upgrade
+            if [ "${CIRCLE_BRANCH}" == "master" ]  # Check current branch to decide to which S3 bucket deploy
+            then
+              aws --region ${AWS_REGION} s3 sync ~/repo/build s3://${PROD_BUCKET} --delete
+            elif [ "${CIRCLE_BRANCH}" == "staging" ]
+            then
+              aws --region ${AWS_REGION} s3 sync ~/repo/build s3://${STAGING_BUCKET} --delete
+            else
+              aws --region ${AWS_REGION} s3 sync ~/repo/build s3://${DEV_BUCKET} --delete
+            fi
+
+  deploy-to-aws-cloudfront:
+    executor: app-executor
+    steps:
+      - checkout
+      - *show-current-directory-name
+      - *install-aws-cli
+      - *prepare-build-artifact
       - run:
-          name: Preparing Artifact
-          command: |
-            npm install
-            npm run build # Here goes your build command.
-            cd build       # My react app generate a build folder
-            zip ../build.zip -r * .[^.]* # Just zip your files
-            echo "Successfully building"
-      - run:
-          name: Deploying Client to S3
+          name: Deploying to AWS Cloudfront
           command: |
             aws configure set preview.cloudfront true  # Turn on cloudfront in AWS CLI
             if [ "${CIRCLE_BRANCH}" == "master" ]  # Check current branch to decide to which S3 bucket deploy
             then
-              aws --region ${AWS_REGION} s3 sync ~/repo/build s3://react-moviedb --delete
+              aws cloudfront create-invalidation --distribution-id ${PRODUCTION_DISTRIBUTION_ID} --paths /\*
             elif [ "${CIRCLE_BRANCH}" == "staging" ]
             then
-              aws --region ${AWS_REGION} s3 sync ~/repo/build s3://react-moviedb-staging --delete
+              aws cloudfront create-invalidation --distribution-id ${STAGING_DISTRIBUTION_ID} --paths /\*
             else
-              aws --region ${AWS_REGION} s3 sync ~/repo/build s3://react-moviedb-dev --delete
+              aws cloudfront create-invalidation --distribution-id ${DEV_DISTRIBUTION_ID} --paths /\*
             fi
 
+  notify-via-slack:
+    executor: general-executor
+    steps:
+      - slack/notify:
+          message: '${CIRCLE_BRANCH} branch deployment to aws s3 and cloudfront is complete.'
+          webhook: $DEV_SLACK_WEBHOOK
+      - slack/status:
+          webhook: $DEV_SLACK_WEBHOOK
+
 workflows:
-  version: 2
   # The build and deploy workflow
   build_and_deploy:
-      jobs:
-          - build
-          # The deploy job will only run on the filtered branches and
-          # require the build job to be successful before it starts
-          - deploy:
-              requires:
-                  - build
-              filters:
-                  branches:
-                      only:
-                          - develop
-                          - staging
-                          - master
+    jobs:
+      - build
+      - linting:
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - develop
+                - staging
+                - master
+      - prettier:
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - develop
+                - staging
+                - master
+      - test:
+          requires:
+            - linting
+            - prettier
+          filters:
+            branches:
+              only:
+                - develop
+                - staging
+                - master
+      # - hold: # <<< A job that will require manual approval in the CircleCI web application.
+      #     type: approval # <<< This key-value pair will set your workflow to a status of "On Hold"
+      #     requires: # We only run the "hold" job when test has succeeded
+      #       - test
+      #     filters:
+      #       branches:
+      #         only:
+      #           - master
+      - deploy-to-aws-s3:
+          requires:
+            - test
+          filters:
+            branches:
+              only:
+                - develop
+                - staging
+                - master
+      - deploy-to-aws-cloudfront:
+          requires:
+            - deploy-to-aws-s3
+          filters:
+            branches:
+              only:
+                - develop
+                - staging
+                - master
+      - notify-via-slack:
+          requires:
+            - deploy-to-aws-cloudfront
+          filters:
+            branches:
+              only:
+                - develop
+                - staging
+                - master

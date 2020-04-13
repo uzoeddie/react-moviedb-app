@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-// import 'react-fancybox/lib/fancybox.css'
 import './index.scss';
 import App from './App';
 import * as serviceWorker from './serviceWorker';

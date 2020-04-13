@@ -1,25 +1,6 @@
 .main {
   text-align: center;
-  display: grid;
-  grid-template-areas:
-    // "header"
-    "content"
-    "footer";
-  grid-template-columns: 1fr;
-  grid-template-rows: 1fr max-content;
   height: 100vh;
   background-color: #020e18;
   overflow-y: scroll;
-}
-
-// header{
-//   grid-area: header;
-// }
-
-.content{
-  grid-area: content;
-}
-
-.footer{
-  grid-area: footer;
 }
