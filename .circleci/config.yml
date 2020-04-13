@@ -110,12 +110,12 @@ jobs:
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]  # Check current branch to decide to which S3 bucket deploy
             then
-              aws --region ${AWS_REGION} s3 sync ~/repo/build s3://react-moviedb --delete
+              aws --region ${AWS_REGION} s3 sync ~/repo/build s3://${PROD_BUCKET} --delete
             elif [ "${CIRCLE_BRANCH}" == "staging" ]
             then
-              aws --region ${AWS_REGION} s3 sync ~/repo/build s3://react-moviedb-staging --delete
+              aws --region ${AWS_REGION} s3 sync ~/repo/build s3://${STAGING_BUCKET} --delete
             else
-              aws --region ${AWS_REGION} s3 sync ~/repo/build s3://react-moviedb-dev --delete
+              aws --region ${AWS_REGION} s3 sync ~/repo/build s3://${DEV_BUCKET} --delete
             fi
 
   deploy-to-aws-cloudfront:
@@ -131,7 +131,7 @@ jobs:
             aws configure set preview.cloudfront true  # Turn on cloudfront in AWS CLI
             if [ "${CIRCLE_BRANCH}" == "master" ]  # Check current branch to decide to which S3 bucket deploy
             then
-              aws cloudfront create-invalidation --distribution-id ${PRODDUCTION_DISTRIBUTION_ID} --paths /\*
+              aws cloudfront create-invalidation --distribution-id ${PRODUCTION_DISTRIBUTION_ID} --paths /\*
             elif [ "${CIRCLE_BRANCH}" == "staging" ]
             then
               aws cloudfront create-invalidation --distribution-id ${STAGING_DISTRIBUTION_ID} --paths /\*
