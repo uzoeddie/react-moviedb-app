@@ -113,16 +113,27 @@ jobs:
       - *restore-cache
       - run: docker build -t ${IMAGE_NAME} .
       - run:
-          name: Tag docker image and push to docker hub
+          name: Tag docker image
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]
             then
-
+              docker tag ${IMAGE_NAME}:stable ${IMAGE_NAME}:${CIRCLE_SHA1}
             elif [ "${CIRCLE_BRANCH}" == "staging" ]
             then
-
+              docker tag ${IMAGE_NAME}:staging ${IMAGE_NAME}:${CIRCLE_SHA1}
             else
               docker tag ${IMAGE_NAME}:dev ${IMAGE_NAME}:${CIRCLE_SHA1}
+            fi
+      - run:
+          name: Push image to docker hub
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ]
+            then
+              docker push ${IMAGE_NAME}:${CIRCLE_SHA1}:stable
+            elif [ "${CIRCLE_BRANCH}" == "staging" ]
+            then
+              docker push ${IMAGE_NAME}:${CIRCLE_SHA1}:staging
+            else
               docker push ${IMAGE_NAME}:${CIRCLE_SHA1}:dev
             fi
 
