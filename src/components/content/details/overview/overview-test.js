@@ -66,9 +66,7 @@ const Overview = () => {
   return (
     <div className="overview">
       <div className="overview-column-1">
-        <div className="description">
-          This is a description about the movie
-        </div>
+        <div className="description">This is a description about the movie</div>
 
         <div className="cast">
           <div className="div-title">Cast</div>
@@ -76,10 +74,7 @@ const Overview = () => {
             <tbody>
               <tr>
                 <td>
-                  <img
-                    src='http://placehold.it/54x81'
-                    alt=""
-                  />
+                  <img src="http://placehold.it/54x81" alt="" />
                 </td>
                 <td>Robert Downing Jr.</td>
                 <td>Iron Man</td>
@@ -92,19 +87,14 @@ const Overview = () => {
         <div className="overview-detail">
           <h6>Production Companies</h6>
           <div className="product-company">
-            <img
-              src='http://placehold.it/30x30'
-              alt=""
-            />
+            <img src="http://placehold.it/30x30" alt="" />
             <span>Marvel</span>
           </div>
         </div>
         <div className="overview-detail">
           <h6>Language(s)</h6>
           <p>
-            <a href="!#">
-                English
-            </a>
+            <a href="!#">English</a>
           </p>
         </div>
         <div className="overview-detail">
