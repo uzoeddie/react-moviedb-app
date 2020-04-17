@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -58,7 +58,6 @@ const Header = (props) => {
   const [search, setSearch] = useState('');
   const [disableSearch, setDisableSearch] = useState(false);
   const [hideHeader, setHideHeader] = useState(false);
-  const menuRef = useRef();
   const history = useHistory();
   const location = useLocation();
   const detailsRoute = useRouteMatch('/:id/:name/details');
@@ -122,7 +121,7 @@ const Header = (props) => {
     <>
       {hideHeader && (
         <div className="header-nav-wrapper">
-          <div className="grad-bar"></div>
+          <div className="header-bar"></div>
           <div className="header-navbar">
             <div className="header-image" onClick={() => navigateToHomePage()}>
               <img src={logo} alt="" />
@@ -130,7 +129,6 @@ const Header = (props) => {
             <div
               className={`${menuClass ? 'header-menu-toggle is-active' : 'header-menu-toggle'}`}
               id="header-mobile-menu"
-              ref={menuRef}
               onClick={() => toggleMenu()}
             >
               <span className="bar"></span>
