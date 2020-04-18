@@ -103,27 +103,25 @@ jobs:
           name: Run test
           command: npm run test
 
-  publish-to-docker:
+  publish-to-docker-hub:
     executor: docker-publisher
     steps:
       - checkout
       - setup_remote_docker
-      - *show-current-directory-name
       - *restore-cache
       - run: docker login -u "${DOCKER_HUB_USER}" -p "${DOCKER_HUB_PASSWORD}"
-      - run: docker build -t ${IMAGE_NAME}:${CIRCLE_BUILD_NUM} .
-      - run: docker tag ${IMAGE_NAME}:${CIRCLE_BRANCH}-${CIRCLE_BUILD_NUM}
+      - run: docker build -t ${IMAGE_NAME}:latest .
       - run:
-          name: Push image to docker hub
+          name: Tag and push image to docker hub
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]
             then
-              docker push ${IMAGE_NAME}:stable
+              docker tag ${IMAGE_NAME}:latest ${IMAGE_NAME}:stable && docker push ${IMAGE_NAME}:stable
             elif [ "${CIRCLE_BRANCH}" == "staging" ]
             then
-              docker push ${IMAGE_NAME}:staging
+              docker tag ${IMAGE_NAME}:latest ${IMAGE_NAME}:staging && docker push ${IMAGE_NAME}:staging
             else
-              docker push ${IMAGE_NAME}:dev
+              docker tag ${IMAGE_NAME}:latest ${IMAGE_NAME}:dev && docker push ${IMAGE_NAME}:dev
             fi
 
   deploy-to-aws-s3:
@@ -216,8 +214,8 @@ workflows:
             branches:
               only:
                 - develop
-                - staging
-                - master
+                # - staging
+                # - master
       - deploy-to-aws-s3:
           requires:
             - publish-to-docker
