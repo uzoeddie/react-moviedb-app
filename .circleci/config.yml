@@ -207,7 +207,7 @@ workflows:
                 - develop
                 - staging
                 - master
-      - publish-to-docker:
+      - publish-to-docker-hub:
           requires:
             - test
           filters:
@@ -218,7 +218,7 @@ workflows:
                 # - master
       - deploy-to-aws-s3:
           requires:
-            - publish-to-docker
+            - publish-to-docker-hub
           filters:
             branches:
               only:
