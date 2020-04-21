@@ -116,12 +116,12 @@ jobs:
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]
             then
-              docker tag ${IMAGE_NAME}:latest ${IMAGE_NAME}:stable && docker push ${IMAGE_NAME}:stable
+              docker tag ${IMAGE_NAME}:latest ${IMAGE_NAME}:stable-${CIRCLE_BUILD_NUM} && docker push ${IMAGE_NAME}:stable-${CIRCLE_BUILD_NUM}
             elif [ "${CIRCLE_BRANCH}" == "staging" ]
             then
-              docker tag ${IMAGE_NAME}:latest ${IMAGE_NAME}:staging && docker push ${IMAGE_NAME}:staging
+              docker tag ${IMAGE_NAME}:latest ${IMAGE_NAME}:staging-${CIRCLE_BUILD_NUM} && docker push ${IMAGE_NAME}:staging-${CIRCLE_BUILD_NUM}
             else
-              docker tag ${IMAGE_NAME}:latest ${IMAGE_NAME}:dev && docker push ${IMAGE_NAME}:dev
+              docker tag ${IMAGE_NAME}:latest ${IMAGE_NAME}:dev-${CIRCLE_BUILD_NUM} && docker push ${IMAGE_NAME}:dev-${CIRCLE_BUILD_NUM}
             fi
 
   deploy-to-aws-s3:

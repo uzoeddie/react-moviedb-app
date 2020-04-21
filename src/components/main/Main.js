@@ -7,12 +7,22 @@ import MainContent from '../content/main-content/MainContent';
 import SearchResult from '../search/SearchResult';
 import Spinner from '../loader/Spinner';
 import { setResponsePageNumber, loadMoreMovies } from '../../redux/actions/movies';
+import { pathURL } from '../../redux/actions/routes';
 
 const Main = (props) => {
-  const { searchResult, totalPages, page, setResponsePageNumber, loadMoreMovies } = props;
+  const {
+    searchResult,
+    totalPages,
+    page,
+    setResponsePageNumber,
+    loadMoreMovies,
+    movieType,
+    pathURL,
+    match,
+    errors
+  } = props;
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(page);
-  const [noMoreData, setNoMoreData] = useState(false);
   const mainRef = useRef();
   const bottomLineRef = useRef();
 
@@ -24,22 +34,17 @@ const Main = (props) => {
   }, []);
 
   useEffect(() => {
+    pathURL(match.path, match.url);
     setResponsePageNumber(currentPage, totalPages);
-    loadMoreMovies('now_playing', currentPage);
-
     // eslint-disable-next-line
-  }, [currentPage, searchResult]);
+  }, [currentPage, totalPages, match]);
 
   const fetchData = () => {
-    if (noMoreData) {
-      return;
-    }
-
-    if (page >= totalPages) {
-      setNoMoreData(true);
-      loadMoreMovies('now_playing', currentPage);
-    } else {
-      setCurrentPage((prev) => prev + 1);
+    let pageNumber = currentPage;
+    if (page < totalPages) {
+      pageNumber += 1;
+      setCurrentPage(pageNumber);
+      loadMoreMovies(movieType, pageNumber);
     }
   };
 
@@ -58,9 +63,11 @@ const Main = (props) => {
           <Spinner />
         ) : (
           <>
-            <div className="content">
-              {searchResult && searchResult.length === 0 ? <MainContent /> : <SearchResult />}
-            </div>
+            {!errors.message && !errors.statusCode && !errors.error && (
+              <div className="content">
+                {searchResult && searchResult.length === 0 ? <MainContent /> : <SearchResult />}
+              </div>
+            )}
           </>
         )}
         <div ref={bottomLineRef}></div>
@@ -76,14 +83,20 @@ Main.propTypes = {
   page: PropTypes.number,
   list: PropTypes.array,
   setResponsePageNumber: PropTypes.func,
-  loadMoreMovies: PropTypes.func
+  loadMoreMovies: PropTypes.func,
+  movieType: PropTypes.string,
+  pathURL: PropTypes.func,
+  match: PropTypes.object,
+  errors: PropTypes.object
 };
 
 const mapStateToProps = (state) => ({
   searchResult: state.movies.searchResult,
   list: state.movies.list,
   totalPages: state.movies.totalPages,
-  page: state.movies.page
+  page: state.movies.page,
+  movieType: state.movies.movieType,
+  errors: state.errors
 });
 
-export default connect(mapStateToProps, { setResponsePageNumber, loadMoreMovies })(Main);
+export default connect(mapStateToProps, { setResponsePageNumber, loadMoreMovies, pathURL })(Main);

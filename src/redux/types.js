@@ -7,3 +7,5 @@ export const RESPONSE_PAGE = 'RESPONSE_PAGE';
 export const MOVIE_DETAILS = 'MOVIE_DETAILS';
 export const LOAD_MORE_RESULTS = 'LOAD_MORE_RESULTS';
 export const CLEAR_MOVIE_DETAILS = 'CLEAR_MOVIE_DETAILS';
+export const APP_ROUTES = 'APP_ROUTES';
+export const PATH_URL = 'PATH_URL';
