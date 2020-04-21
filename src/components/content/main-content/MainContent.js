@@ -15,11 +15,14 @@ const MainContent = (props) => {
   const [images, setImages] = useState([]);
   const randomMovies = list.sort(() => Math.random() - Math.random()).slice(0, 3);
 
-  useEffect(() => {
-    setCurrentPage(currentPage);
-    setResponsePageNumber(currentPage, totalPages);
-    getMovies('now_playing', currentPage);
+  const HEADER_TYPE = {
+    now_playing: 'Now Playing',
+    popular: 'Popular',
+    top_rated: 'Top Rated',
+    upcoming: 'Upcoming'
+  };
 
+  useEffect(() => {
     if (randomMovies.length) {
       const IMAGES = [
         {
@@ -39,21 +42,30 @@ const MainContent = (props) => {
     }
 
     // eslint-disable-next-line
-  }, [currentPage]);
+  }, []);
+
+  useEffect(() => {
+    setCurrentPage(page);
+    // eslint-disable-next-line
+  }, [page, totalPages]);
 
   const paginate = (type) => {
+    let pageNumber = currentPage;
     if (type === 'prev' && currentPage >= 1) {
-      setCurrentPage((prev) => prev - 1);
+      pageNumber -= 1;
     } else {
-      setCurrentPage((prev) => prev + 1);
+      pageNumber += 1;
     }
+    setCurrentPage(pageNumber);
+    setResponsePageNumber(pageNumber, totalPages);
+    getMovies(movieType, pageNumber);
   };
 
   return (
     <div className="main-content">
       <SlideShow images={images} auto={true} />
       <div className="grid-movie-title">
-        <div className="movieType">{movieType}</div>
+        <div className="movieType">{HEADER_TYPE[movieType]}</div>
         <div className="paginate">
           <Paginate currentPage={currentPage} totalPages={totalPages} paginate={paginate} />
         </div>

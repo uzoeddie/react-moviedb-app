@@ -13,7 +13,7 @@ const initialState = {
   list: [],
   searchResult: [],
   searchQuery: '',
-  movieType: 'Now Playing',
+  movieType: 'now_playing',
   movie: [],
   page: 1,
   totalPages: 0

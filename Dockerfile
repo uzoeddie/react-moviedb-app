@@ -2,10 +2,10 @@
 FROM node:12-alpine
 
 # Copy the files from the current directory to app/
-COPY . app/
+COPY . /app
 
 # Use app as the working directory
-WORKDIR app/
+WORKDIR /app
 
 # Install dependencies
 RUN npm install
